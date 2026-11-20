@@ -1,9 +1,12 @@
 import React from "react";
-import { AbsoluteFill, interpolate, Sequence, useCurrentFrame } from "remotion";
-import { Bell, Bowl, Dog, Drill, Face } from "./Icons";
+import { AbsoluteFill, interpolate, Sequence, spring, useCurrentFrame, useVideoConfig } from "remotion";
+import { Bell, Bowl, Dog, Drill, Person } from "./Icons";
+import { Burst, Squiggle, Thought } from "./fx";
 import { Appear, Caption, Row, Scene, Sfx, Tag, Voice } from "./ui";
 import { colors, font } from "./theme";
 import { VOICE as V } from "./voice";
+
+const OUT = "#3A2A1E";
 
 /* ---------- Zeitplan (in Frames, 30 fps) – richtet sich nach der Sprecherstimme ---------- */
 const GAP = 12;
@@ -46,26 +49,57 @@ const center: React.CSSProperties = {
 };
 
 /* ---------- 0 · Titel ---------- */
+const BouncyTitle: React.FC<{ text: string; delay: number }> = ({ text, delay }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  return (
+    <div style={{ display: "flex", justifyContent: "center", fontSize: 116, fontWeight: 900, color: colors.ink }}>
+      {text.split("").map((ch, i) => {
+        const p = spring({ frame: frame - delay - i * 2, fps, config: { damping: 9, stiffness: 160 } });
+        const wobble = Math.sin((frame - i * 4) / 14) * 4;
+        return (
+          <span
+            key={i}
+            style={{
+              display: "inline-block",
+              transform: `translateY(${(1 - p) * -120 + wobble}px)`,
+              opacity: Math.min(1, p * 2),
+              whiteSpace: "pre",
+              textShadow: `4px 4px 0 ${i % 2 ? colors.ucsBg : colors.csBg}`,
+            }}
+          >
+            {ch}
+          </span>
+        );
+      })}
+    </div>
+  );
+};
+
 export const TitleScene: React.FC = () => {
   const frame = useCurrentFrame();
   return (
     <Scene duration={DUR.title}>
       <Sfx name="bell" at={5} volume={0.35} />
       <Voice name="title" at={15} />
-      <AbsoluteFill style={{ justifyContent: "center", alignItems: "center", gap: 30 }}>
-        <Appear delay={5}>
-          <div style={{ display: "flex", alignItems: "flex-end", gap: 40 }}>
-            <Bell size={150} ringing={frame > 5 && frame < 50} />
-            <Dog size={300} />
-          </div>
-        </Appear>
-        <Appear delay={15}>
-          <div style={{ fontSize: 110, fontWeight: 800, textAlign: "center" }}>
-            Klassische Konditionierung
-          </div>
-        </Appear>
-        <Appear delay={30}>
-          <div style={{ fontSize: 42, color: colors.muted, textAlign: "center" }}>
+      <AbsoluteFill style={{ justifyContent: "center", alignItems: "center" }}>
+        <div style={{ position: "relative" }}>
+          <Appear delay={5} bouncy>
+            <div style={{ display: "flex", alignItems: "flex-end", gap: 70 }}>
+              <Bell size={170} ringing={frame > 5 && frame < 50} />
+              <Dog size={380} mood={frame > 20 && frame < 70 ? "alert" : "neutral"} />
+            </div>
+          </Appear>
+          <Burst text="DING!" at={6} x={60} y={10} size={140} />
+        </div>
+        <div style={{ marginTop: 20 }}>
+          <BouncyTitle text="Klassische Konditionierung" delay={12} />
+        </div>
+        <div style={{ display: "flex", justifyContent: "center", marginTop: 4 }}>
+          <Squiggle width={520} color={colors.ucs} delay={50} />
+        </div>
+        <Appear delay={55}>
+          <div style={{ fontSize: 42, color: colors.muted, textAlign: "center", marginTop: 16, fontWeight: 600 }}>
             Lernen durch Reizkopplung · nach Iwan P. Pawlow
           </div>
         </Appear>
@@ -79,7 +113,7 @@ export const VorherScene: React.FC = () => {
   const frame = useCurrentFrame();
   const row2 = T.vorherRow2;
   return (
-    <Scene step="Schritt 1" title="Vor der Konditionierung" duration={DUR.vorher}>
+    <Scene step="Schritt 1" stepColor={colors.ucs} title="Vor der Konditionierung" duration={DUR.vorher}>
       <Voice name="vorherA" at={T.vorherA} />
       <Voice name="vorherB" at={row2 + 20} />
       <Sfx name="clink" at={22} volume={0.7} />
@@ -88,23 +122,26 @@ export const VorherScene: React.FC = () => {
       <Sfx name="pop" at={55} />
       <Sfx name="bell" at={row2 + 5} volume={0.35} />
       <Sfx name="pop" at={row2 + 12} />
-      <div style={{ ...center, top: 250 }}>
+      <div style={{ ...center, top: 196 }}>
         <Row
           delay={15}
-          stimulus={<Bowl size={190} />}
+          stimulus={<Bowl size={230} />}
           stimulusTags={<Tag kind="ucs" abbr="UCS" label="Futter" delay={25} />}
-          response={<Dog size={260} salivating={frame > 50} />}
+          response={<Dog size={250} mood={frame > 50 ? "hungry" : "neutral"} droolSince={50} />}
           responseTag={<Tag kind="ucs" abbr="UCR" label="Speichelfluss" delay={50} />}
+          responseFx={<Burst text="MJAM!" at={50} x={540} y={40} size={130} fill="#FFB0A8" hold={70} />}
         />
       </div>
-      <div style={{ ...center, top: 560 }}>
+      <div style={{ ...center, top: 548 }}>
         <Row
           delay={row2}
           crossed
           stimulus={<Bell size={170} ringing={frame > row2 + 5 && frame < row2 + 50} />}
           stimulusTags={<Tag kind="neutral" abbr="NS" label="Glocke" delay={row2 + 10} />}
-          response={<Dog size={260} alert={frame > row2 + 30} />}
+          stimulusFx={<Burst text="DING!" at={row2 + 6} x={120} y={60} size={130} />}
+          response={<Dog size={250} mood={frame > row2 + 30 ? "alert" : "neutral"} />}
           responseTag={<Tag kind="neutral" abbr="–" label="kein Speichelfluss" delay={row2 + 40} />}
+          responseFx={<Thought text="?" at={row2 + 32} x={470} y={-30} hold={200} />}
         />
       </div>
       <Sequence from={0} durationInFrames={row2} layout="none">
@@ -120,6 +157,7 @@ export const VorherScene: React.FC = () => {
 /* ---------- 2 · Während der Konditionierung ---------- */
 export const WaehrendScene: React.FC = () => {
   const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
   const start = T.trialStart;
   const period = T.trialPeriod;
   const local = frame - start;
@@ -127,13 +165,14 @@ export const WaehrendScene: React.FC = () => {
   const t = local < 0 ? -1 : local % period;
   const active = local >= 0 && local < period * 4;
   const ringing = active && t >= 0 && t < 40;
-  const foodOpacity = active
+  const food = active
     ? interpolate(t, [14, 22, 56, 64], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })
     : 0;
   const salivating = active && t > 26 && t < 66;
+  const counterPop = spring({ frame: local - (trial - 1) * period, fps, config: { damping: 8 } });
 
   return (
-    <Scene step="Schritt 2" title="Während der Konditionierung" duration={DUR.waehrend}>
+    <Scene step="Schritt 2" stepColor={colors.neutral} title="Während der Konditionierung" duration={DUR.waehrend}>
       <Voice name="waehrend" at={T.waehrend} />
       {[0, 1, 2, 3].map((k) => (
         <React.Fragment key={k}>
@@ -145,12 +184,13 @@ export const WaehrendScene: React.FC = () => {
       <div style={{ ...center, top: 330 }}>
         <Row
           delay={10}
+          iconHeight={250}
           stimulus={
             <>
-              <Bell size={170} ringing={ringing} />
-              <div style={{ fontSize: 70, fontWeight: 800, color: colors.muted, alignSelf: "center" }}>+</div>
-              <div style={{ opacity: Math.max(foodOpacity, 0.15) }}>
-                <Bowl size={190} />
+              <Bell size={160} ringing={ringing} />
+              <div style={{ fontSize: 80, fontWeight: 900, color: colors.ucs, alignSelf: "center" }}>+</div>
+              <div style={{ opacity: Math.max(food, 0.15), transform: `translateY(${(1 - food) * 40}px) scale(${0.8 + food * 0.2})` }}>
+                <Bowl size={210} />
               </div>
             </>
           }
@@ -160,15 +200,47 @@ export const WaehrendScene: React.FC = () => {
               <Tag kind="ucs" abbr="UCS" label="Futter" delay={28} />
             </>
           }
-          response={<Dog size={260} salivating={salivating} alert={ringing} />}
+          stimulusFx={[0, 1, 2, 3].map((k) => (
+            <Burst key={k} text="DING!" at={start + k * period} x={100} y={50} size={110} hold={30} />
+          ))}
+          response={<Dog size={280} mood={salivating ? "hungry" : ringing ? "alert" : "neutral"} droolSince={start} />}
           responseTag={<Tag kind="ucs" abbr="UCR" label="Speichelfluss" delay={40} />}
         />
       </div>
-      <div style={{ position: "absolute", top: 90, right: 110 }}>
-        <Appear delay={start}>
-          <div style={{ fontSize: 40, fontWeight: 700, background: "#fff", padding: "14px 28px", borderRadius: 16, boxShadow: "0 6px 20px rgba(0,0,0,0.08)" }}>
-            Durchgang <span style={{ color: colors.cs }}>{Math.max(trial, 1)}</span>
-            <span style={{ color: colors.muted }}> … viele Male</span>
+      <div style={{ ...center, top: 180 }}>
+        <Appear delay={start} bouncy>
+          <div
+            style={{
+              fontSize: 38,
+              fontWeight: 800,
+              background: "#fff",
+              padding: "12px 26px",
+              borderRadius: 18,
+              border: `3px solid ${OUT}`,
+              boxShadow: `4px 4px 0 ${OUT}`,
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+            }}
+          >
+            Durchgang
+            <span
+              style={{
+                display: "inline-flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: 56,
+                height: 56,
+                borderRadius: 999,
+                background: colors.cs,
+                color: "#fff",
+                border: `3px solid ${OUT}`,
+                transform: `scale(${0.6 + counterPop * 0.4})`,
+              }}
+            >
+              {Math.max(trial, 1)}
+            </span>
+            <span style={{ color: colors.muted, fontWeight: 600 }}>… viele Male</span>
           </div>
         </Appear>
       </div>
@@ -183,28 +255,38 @@ export const WaehrendScene: React.FC = () => {
 export const NachherScene: React.FC = () => {
   const frame = useCurrentFrame();
   const b = T.nachherBell;
+  const capAt = T.nachherB + 40;
   return (
-    <Scene step="Schritt 3" title="Nach der Konditionierung" duration={DUR.nachher}>
+    <Scene step="Schritt 3" stepColor={colors.cs} title="Nach der Konditionierung" duration={DUR.nachher}>
       <Sfx name="bell" at={b} volume={0.4} />
       <Voice name="nachherA" at={T.nachherA} />
       <Voice name="nachherB" at={T.nachherB} />
       <Sfx name="drip" at={b + 40} />
       <Sfx name="drip" at={b + 55} volume={0.7} />
-      <Sfx name="chime" at={T.nachherB} volume={0.4} />
-      <div style={{ ...center, top: 330 }}>
+      <Sfx name="whoosh" at={capAt - 8} volume={0.5} />
+      <Sfx name="chime" at={capAt + 6} volume={0.45} />
+      <div style={{ ...center, top: 250 }}>
         <Row
           delay={5}
-          stimulus={<Bell size={170} ringing={frame > b && frame < b + 45} />}
+          iconHeight={250}
+          stimulus={<Bell size={180} ringing={frame > b && frame < b + 45} />}
           stimulusTags={<Tag kind="cs" abbr="CS" label="Glocke" delay={15} />}
-          response={<Dog size={260} salivating={frame > b + 38} alert />}
+          stimulusFx={<Burst text="DING!" at={b + 1} x={130} y={60} size={130} />}
+          response={<Dog size={280} mood={frame > b + 38 ? "hungry" : "alert"} droolSince={b + 38} capAt={capAt} />}
           responseTag={<Tag kind="cs" abbr="CR" label="Speichelfluss" delay={b + 40} />}
+          responseFx={
+            <>
+              <Burst text="SCHLABBER!" at={b + 40} x={470} y={30} size={120} fill="#A8DDF5" hold={70} rotate={8} />
+              <Burst text="GELERNT!" at={capAt + 8} x={150} y={20} size={120} fill="#B6F0C2" hold={90} />
+            </>
+          }
         />
       </div>
-      <div style={{ ...center, top: 690 }}>
+      <div style={{ ...center, top: 700 }}>
         <Appear delay={T.nachherB}>
-          <div style={{ fontSize: 36, color: colors.muted, display: "flex", gap: 18, alignItems: "center" }}>
+          <div style={{ color: colors.muted, display: "flex", gap: 18, alignItems: "center" }}>
             <Tag kind="neutral" abbr="NS" label="Glocke" delay={T.nachherB} />
-            <span style={{ fontSize: 44 }}>wird zum</span>
+            <span style={{ fontSize: 40, fontWeight: 800, color: colors.ink }}>wird zum</span>
             <Tag kind="cs" abbr="CS" label="Glocke" delay={T.nachherB + 30} />
           </div>
         </Appear>
@@ -215,32 +297,59 @@ export const NachherScene: React.FC = () => {
 };
 
 /* ---------- 4 · Begriffe ---------- */
-const terms: { kind: "neutral" | "ucs" | "cs"; abbr: string; name: string; text: string; ex: string }[] = [
-  { kind: "neutral", abbr: "NS", name: "neutraler Reiz", text: "löst (noch) keine spezifische Reaktion aus", ex: "Glocke vorher" },
-  { kind: "ucs", abbr: "UCS", name: "unkonditionierter Reiz", text: "löst ohne Lernen eine Reaktion aus", ex: "Futter" },
-  { kind: "ucs", abbr: "UCR", name: "unkonditionierte Reaktion", text: "angeborene, ungelernte Reaktion", ex: "Speichelfluss auf Futter" },
-  { kind: "cs", abbr: "CS", name: "konditionierter Reiz", text: "früher neutral, löst jetzt die Reaktion aus", ex: "Glocke nachher" },
-  { kind: "cs", abbr: "CR", name: "konditionierte Reaktion", text: "gelernte Reaktion auf den CS", ex: "Speichelfluss auf Glocke" },
+const terms: { kind: "neutral" | "ucs" | "cs"; abbr: string; name: string; text: string; ex: string; icon: string }[] = [
+  { kind: "neutral", abbr: "NS", name: "neutraler Reiz", text: "löst (noch) keine spezifische Reaktion aus", ex: "Glocke vorher", icon: "🔔" },
+  { kind: "ucs", abbr: "UCS", name: "unkonditionierter Reiz", text: "löst ohne Lernen eine Reaktion aus", ex: "Futter", icon: "🍖" },
+  { kind: "ucs", abbr: "UCR", name: "unkonditionierte Reaktion", text: "angeborene, ungelernte Reaktion", ex: "Speichelfluss auf Futter", icon: "💧" },
+  { kind: "cs", abbr: "CS", name: "konditionierter Reiz", text: "früher neutral, löst jetzt die Reaktion aus", ex: "Glocke nachher", icon: "🔔" },
+  { kind: "cs", abbr: "CR", name: "konditionierte Reaktion", text: "gelernte Reaktion auf den CS", ex: "Speichelfluss auf Glocke", icon: "💧" },
 ];
 
 export const BegriffeScene: React.FC = () => (
-  <Scene step="Überblick" title="Die Fachbegriffe" duration={DUR.begriffe}>
+  <Scene step="Überblick" stepColor={colors.ink} title="Die Fachbegriffe" duration={DUR.begriffe}>
     {terms.map((term, i) => (
       <React.Fragment key={term.abbr}>
         <Sfx name="pop" at={T.terms[i]} volume={0.7} />
         <Voice name={`term${i}`} at={T.terms[i] + 4} />
       </React.Fragment>
     ))}
-    <div style={{ position: "absolute", top: 250, left: 110, right: 110, display: "flex", flexDirection: "column", gap: 22 }}>
+    <div style={{ position: "absolute", top: 210, left: 110, right: 110, display: "flex", flexDirection: "column", gap: 20 }}>
       {terms.map((term, i) => {
         const fg = term.kind === "neutral" ? colors.neutral : term.kind === "ucs" ? colors.ucs : colors.cs;
         return (
-          <Appear key={term.abbr} delay={T.terms[i]}>
-            <div style={{ display: "flex", alignItems: "center", gap: 30, background: "#fff", borderRadius: 18, padding: "20px 30px", borderLeft: `12px solid ${fg}`, boxShadow: "0 4px 14px rgba(0,0,0,0.06)" }}>
-              <div style={{ width: 120, fontSize: 48, fontWeight: 800, color: fg }}>{term.abbr}</div>
-              <div style={{ width: 520, fontSize: 36, fontWeight: 700 }}>{term.name}</div>
-              <div style={{ flex: 1, fontSize: 30 }}>{term.text}</div>
-              <div style={{ width: 380, fontSize: 28, color: colors.muted, textAlign: "right" }}>z. B. {term.ex}</div>
+          <Appear key={term.abbr} delay={T.terms[i]} bouncy>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 28,
+                background: "#fff",
+                borderRadius: 24,
+                padding: "16px 28px",
+                border: `3.5px solid ${OUT}`,
+                boxShadow: `5px 5px 0 ${fg}`,
+              }}
+            >
+              <div
+                style={{
+                  width: 120,
+                  textAlign: "center",
+                  fontSize: 40,
+                  fontWeight: 900,
+                  color: "#fff",
+                  background: fg,
+                  borderRadius: 16,
+                  border: `3px solid ${OUT}`,
+                  padding: "6px 0",
+                }}
+              >
+                {term.abbr}
+              </div>
+              <div style={{ width: 500, fontSize: 36, fontWeight: 800 }}>{term.name}</div>
+              <div style={{ flex: 1, fontSize: 29 }}>{term.text}</div>
+              <div style={{ width: 400, fontSize: 27, color: colors.muted, textAlign: "right", fontWeight: 600 }}>
+                {term.icon} {term.ex}
+              </div>
             </div>
           </Appear>
         );
@@ -254,18 +363,21 @@ export const AlltagScene: React.FC = () => {
   const frame = useCurrentFrame();
   const d = T.drill;
   return (
-    <Scene step="Im Alltag" title="Angst beim Zahnarzt" duration={DUR.alltag}>
+    <Scene step="Im Alltag" stepColor="#C0463E" title="Angst beim Zahnarzt" duration={DUR.alltag}>
       <Voice name="alltagA" at={T.alltagA} />
       <Sfx name="drill" at={d} volume={0.4} />
       <Sfx name="pop" at={d + 30} />
       <Voice name="alltagB" at={alltagB} />
-      <div style={{ ...center, top: 300 }}>
+      <div style={{ ...center, top: 250 }}>
         <Row
           delay={10}
-          stimulus={<Drill size={190} active={frame > d && frame < d + 90} />}
+          iconHeight={270}
+          stimulus={<Drill size={230} active={frame > d && frame < d + 90} />}
           stimulusTags={<Tag kind="cs" abbr="CS" label="Bohrergeräusch" delay={d} />}
-          response={<Face size={210} anxious={frame > d + 25} />}
+          stimulusFx={<Burst text="SSSRRR!" at={d + 2} x={130} y={50} size={120} fill="#FFD0A0" hold={85} />}
+          response={<Person size={260} anxious={frame > d + 25} />}
           responseTag={<Tag kind="cs" abbr="CR" label="Angst" delay={d + 30} />}
+          responseFx={<Burst text="IIIH!" at={d + 28} x={520} y={50} size={130} fill="#FFB0A8" hold={90} rotate={10} />}
         />
       </div>
       <Caption delay={alltagB}>
@@ -281,17 +393,48 @@ export const MerkeScene: React.FC = () => (
     <Sfx name="chime" at={5} volume={0.45} />
     <Voice name="merke" at={20} />
     <AbsoluteFill style={{ justifyContent: "center", alignItems: "center", fontFamily: font }}>
-      <Appear delay={5}>
-        <div style={{ fontSize: 34, fontWeight: 700, color: colors.cs, letterSpacing: 3, textTransform: "uppercase", textAlign: "center" }}>
-          Merke
-        </div>
-      </Appear>
-      <Appear delay={15}>
-        <div style={{ fontSize: 58, fontWeight: 700, textAlign: "center", maxWidth: 1500, lineHeight: 1.3, marginTop: 20 }}>
-          Ein neutraler Reiz wird durch wiederholte Kopplung mit einem unkonditionierten Reiz zum{" "}
-          <span style={{ color: colors.cs }}>konditionierten Reiz</span> – er löst nun selbst eine Reaktion aus.
+      <Appear delay={10} bouncy>
+        <div
+          style={{
+            position: "relative",
+            background: "#fff",
+            border: `4px solid ${OUT}`,
+            borderRadius: 36,
+            boxShadow: `8px 8px 0 ${colors.cs}`,
+            padding: "60px 80px 60px 80px",
+            maxWidth: 1400,
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              top: -30,
+              left: 60,
+              background: colors.cs,
+              color: "#fff",
+              fontSize: 34,
+              fontWeight: 900,
+              letterSpacing: 3,
+              padding: "8px 26px",
+              borderRadius: 999,
+              border: `3px solid ${OUT}`,
+              transform: "rotate(-3deg)",
+            }}
+          >
+            💡 MERKE
+          </div>
+          <div style={{ fontSize: 54, fontWeight: 700, textAlign: "center", lineHeight: 1.35 }}>
+            Ein <span style={{ color: colors.neutral }}>neutraler Reiz</span> wird durch wiederholte Kopplung mit einem{" "}
+            <span style={{ color: colors.ucs }}>unkonditionierten Reiz</span> zum{" "}
+            <span style={{ color: colors.cs }}>konditionierten Reiz</span> – er löst nun selbst eine Reaktion aus.
+          </div>
         </div>
       </Appear>
     </AbsoluteFill>
+    <div style={{ position: "absolute", right: 60, bottom: 20 }}>
+      <Appear delay={40} bouncy>
+        <Dog size={360} mood="neutral" capAt={40} />
+      </Appear>
+    </div>
   </Scene>
 );
