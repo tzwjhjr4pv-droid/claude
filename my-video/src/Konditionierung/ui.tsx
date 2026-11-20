@@ -22,9 +22,13 @@ export const Sfx: React.FC<{ name: string; at: number; volume?: number }> = ({ n
 );
 
 /** Sprecherstimme ab Frame `at` (Dateien aus scripts/make-voice.py) */
-export const Voice: React.FC<{ name: string; at: number }> = ({ name, at }) => (
+export const Voice: React.FC<{ name: string; at: number; folder?: string }> = ({
+  name,
+  at,
+  folder = "konditionierung",
+}) => (
   <Sequence from={at} layout="none">
-    <Html5Audio src={staticFile(`voice/${name}.wav`)} volume={1} />
+    <Html5Audio src={staticFile(`voice/${folder}/${name}.wav`)} volume={1} />
   </Sequence>
 );
 

@@ -1,0 +1,16 @@
+{
+  "title": "Klassische Konditionierung. Wie lernen wir, auf einen Reiz zu reagieren, der uns vorher völlig gleichgültig war? Der russische Physiologe Iwan Pawlow hat das um 1900 an Hunden untersucht.",
+  "vorherA": "Vor der Konditionierung: Bekommt der Hund Futter, fließt Speichel. Das ist angeboren. Das Futter ist ein unkonditionierter Reiz, der Speichelfluss eine unkonditionierte Reaktion.",
+  "vorherB": "Eine Glocke dagegen ist zunächst ein neutraler Reiz. Der Hund horcht zwar auf, aber es fließt kein Speichel.",
+  "waehrend": "Während der Konditionierung werden beide Reize gekoppelt. Die Glocke ertönt, und kurz darauf gibt es Futter. Das wird viele Male wiederholt.",
+  "nachherA": "Nach der Konditionierung reicht schon die Glocke allein. Der Hund speichelt.",
+  "nachherB": "Aus dem neutralen Reiz ist ein konditionierter Reiz geworden. Und der Speichelfluss auf die Glocke ist eine konditionierte, also gelernte Reaktion.",
+  "term0": "Neutraler Reiz: Er löst zunächst keine bestimmte Reaktion aus.",
+  "term1": "Unkonditionierter Reiz: Er löst ohne Lernen eine Reaktion aus.",
+  "term2": "Unkonditionierte Reaktion: die angeborene Reaktion darauf.",
+  "term3": "Konditionierter Reiz: der früher neutrale Reiz, der jetzt die Reaktion auslöst.",
+  "term4": "Konditionierte Reaktion: die gelernte Reaktion auf diesen Reiz.",
+  "alltagA": "Das gibt es auch bei Menschen. Wer beim Zahnarzt Schmerzen hatte, bekommt oft schon beim Geräusch des Bohrers Angst.",
+  "alltagB": "Das Geräusch ist zum konditionierten Reiz geworden, die Angst zur konditionierten Reaktion.",
+  "merke": "Merke: Ein neutraler Reiz wird durch wiederholte Kopplung mit einem unkonditionierten Reiz zum konditionierten Reiz. Er löst nun selbst eine Reaktion aus."
+}

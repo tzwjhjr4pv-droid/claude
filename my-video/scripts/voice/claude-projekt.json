@@ -1,0 +1,17 @@
+{
+  "title": "Klohd-Projekte einrichten. Einmal einrichten, und du musst nicht mehr bei jeder Anfrage alles neu erklären.",
+  "problemA": "Kennst du das? Jedes Mal erklärst du der KI aufs Neue, wer deine Klasse ist und was du brauchst.",
+  "problemB": "Das kostet Zeit und Nerven. Die Lösung heißt: ein Projekt.",
+  "compareA": "Ins Projekt gehört, was immer gilt. Die Anweisungen sagen, wer deine Klasse ist und wie die KI antworten soll. Die Dateien zeigen, woran sie sich orientieren soll.",
+  "compareB": "Im Chat steht dann nur noch die Aufgabe. Für ein neues Thema öffnest du einfach einen neuen Chat im selben Projekt.",
+  "step1A": "Schritt eins: Anlegen. Klicke auf Projekte und dann auf Neues Projekt.",
+  "step1B": "Wähle einen klaren Namen, zum Beispiel FOS elf Psychologie. Am besten legst du ein Projekt pro Fach oder Bildungsgang an.",
+  "step2A": "Schritt zwei: Anweisungen. Öffne im Projekt das Feld Anweisungen und füge die Muster-Anweisung ein.",
+  "step2B": "Dann füllst du die drei Klammern aus: das Fach, den Bildungsgang mit Klassenstufe und deine Lerngruppe, also Sprachstand, Vorwissen und Besonderheiten.",
+  "step3A": "Schritt drei: Material hochladen. Unter Dateien klickst du auf das Plus und lädst zum Beispiel den Rahmenlehrplan und ein Musterblatt hoch, als PDF oder Word.",
+  "step3B": "Wichtig: alles ohne Namen von Schülerinnen und Schülern.",
+  "step4A": "Schritt vier: Testen. Öffne einen neuen Chat im Projekt und stelle eine erste Anfrage. Zum Beispiel: Erstelle ein Arbeitsblatt zu Lernen am Modell. Stelle mir Rückfragen.",
+  "step4B": "Klohd kennt jetzt deine Klasse und dein Material und fragt gezielt nach. Passt das Ergebnis noch nicht, schärfst du die Anweisung nach und testest noch einmal.",
+  "privacy": "Und denk an den Datenschutz. Fachtexte und eigene Arbeitsblätter sind unbedenklich. Schülertexte nur anonymisiert. Namen mit Noten, Diagnosen oder Gutachten gehören nie in die KI. Schalte außerdem in den Einstellungen unter Datenschutz das Training aus.",
+  "merke": "Merke: Ins Projekt gehört, was immer gilt. Die Anweisung sagt, wer deine Klasse ist, die Dateien zeigen, woran sich die KI orientieren soll. Im Chat bleiben nur Aufgabe und Rückfrage."
+}

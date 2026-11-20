@@ -60,3 +60,17 @@ for i, fr in enumerate([523.25, 659.25, 783.99]):
     x[s:] += (np.sin(2*np.pi*fr*seg) + .3*np.sin(4*np.pi*fr*seg)) * np.exp(-seg*2.5)
 save("chime", x, 0.45)
 print("ok")
+
+# Mausklick
+tt = t(.06); x = rng.normal(0, 1, len(tt)) * np.exp(-tt*120) + np.sin(2*np.pi*2400*tt) * np.exp(-tt*90)
+save("click", x, 0.4)
+
+# Tastaturtippen, 3 s (wird im Video passend abgeschnitten)
+d = 3.0; typing = np.zeros(int(SR*d)); pos = 0.0
+while pos < d - 0.1:
+    k = t(.04); f = rng.uniform(1800, 3200)
+    hit = rng.normal(0, 1, len(k)) * np.exp(-k*150) * .6 + np.sin(2*np.pi*f*k) * np.exp(-k*200) * .4
+    i = int(pos*SR); typing[i:i+len(hit)] += hit * rng.uniform(.6, 1)
+    pos += rng.uniform(.06, .13)
+save("typing", typing, 0.3)
+print("ok2")
