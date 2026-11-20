@@ -1,12 +1,26 @@
 import React from "react";
 import {
   AbsoluteFill,
+  Html5Audio,
+  Sequence,
+  staticFile,
   interpolate,
   spring,
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
 import { colors, font, Kind, kindColor } from "./theme";
+
+/** Soundeffekt ab Frame `at` (relativ zur Szene) */
+export const Sfx: React.FC<{ name: string; at: number; volume?: number }> = ({
+  name,
+  at,
+  volume = 1,
+}) => (
+  <Sequence from={at} layout="none">
+    <Html5Audio src={staticFile(`sfx/${name}.wav`)} volume={volume} />
+  </Sequence>
+);
 
 export const useAppear = (delay = 0) => {
   const frame = useCurrentFrame();
@@ -63,6 +77,7 @@ export const Scene: React.FC<{
           </Appear>
         </div>
       )}
+      <Sfx name="whoosh" at={0} volume={0.6} />
       {children}
     </AbsoluteFill>
   );

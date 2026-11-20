@@ -1,7 +1,7 @@
 import React from "react";
 import { AbsoluteFill, interpolate, Sequence, useCurrentFrame } from "remotion";
 import { Bell, Bowl, Dog, Drill, Face } from "./Icons";
-import { Appear, Caption, Row, Scene, Tag } from "./ui";
+import { Appear, Caption, Row, Scene, Sfx, Tag } from "./ui";
 import { colors, font } from "./theme";
 
 export const DUR = {
@@ -23,12 +23,15 @@ const center: React.CSSProperties = {
 };
 
 /* ---------- 0 · Titel ---------- */
-export const TitleScene: React.FC = () => (
+export const TitleScene: React.FC = () => {
+  const frame = useCurrentFrame();
+  return (
   <Scene duration={DUR.title}>
+    <Sfx name="bell" at={8} volume={0.5} />
     <AbsoluteFill style={{ justifyContent: "center", alignItems: "center", gap: 30 }}>
       <Appear delay={5}>
         <div style={{ display: "flex", alignItems: "flex-end", gap: 40 }}>
-          <Bell size={150} ringing />
+          <Bell size={150} ringing={frame > 8 && frame < 52} />
           <Dog size={300} />
         </div>
       </Appear>
@@ -44,7 +47,8 @@ export const TitleScene: React.FC = () => (
       </Appear>
     </AbsoluteFill>
   </Scene>
-);
+  );
+};
 
 /* ---------- 1 · Vor der Konditionierung ---------- */
 export const VorherScene: React.FC = () => {
@@ -52,6 +56,12 @@ export const VorherScene: React.FC = () => {
   const row2 = 150;
   return (
     <Scene step="Schritt 1" title="Vor der Konditionierung" duration={DUR.vorher}>
+      <Sfx name="clink" at={22} />
+      <Sfx name="pop" at={25} />
+      <Sfx name="drip" at={52} />
+      <Sfx name="pop" at={55} />
+      <Sfx name="bell" at={row2 + 10} volume={0.6} />
+      <Sfx name="pop" at={row2 + 12} />
       <div style={{ ...center, top: 250 }}>
         <Row
           delay={15}
@@ -65,7 +75,7 @@ export const VorherScene: React.FC = () => {
         <Row
           delay={row2}
           crossed
-          stimulus={<Bell size={170} ringing={frame > row2 + 10} />}
+          stimulus={<Bell size={170} ringing={frame > row2 + 10 && frame < row2 + 55} />}
           stimulusTags={<Tag kind="neutral" abbr="NS" label="Glocke" delay={row2 + 10} />}
           response={<Dog size={260} alert={frame > row2 + 30} />}
           responseTag={<Tag kind="neutral" abbr="–" label="kein Speichelfluss" delay={row2 + 40} />}
@@ -98,6 +108,13 @@ export const WaehrendScene: React.FC = () => {
 
   return (
     <Scene step="Schritt 2" title="Während der Konditionierung" duration={DUR.waehrend}>
+      {[0, 1, 2, 3].map((k) => (
+        <React.Fragment key={k}>
+          <Sfx name="bell" at={start + k * period} volume={0.45} />
+          <Sfx name="clink" at={start + k * period + 16} volume={0.8} />
+          <Sfx name="drip" at={start + k * period + 28} />
+        </React.Fragment>
+      ))}
       <div style={{ ...center, top: 330 }}>
         <Row
           delay={10}
@@ -140,10 +157,14 @@ export const NachherScene: React.FC = () => {
   const frame = useCurrentFrame();
   return (
     <Scene step="Schritt 3" title="Nach der Konditionierung" duration={DUR.nachher}>
+      <Sfx name="bell" at={25} volume={0.6} />
+      <Sfx name="drip" at={62} />
+      <Sfx name="drip" at={75} volume={0.7} />
+      <Sfx name="chime" at={120} volume={0.8} />
       <div style={{ ...center, top: 330 }}>
         <Row
           delay={10}
-          stimulus={<Bell size={170} ringing={frame > 25} />}
+          stimulus={<Bell size={170} ringing={frame > 25 && frame < 70} />}
           stimulusTags={<Tag kind="cs" abbr="CS" label="Glocke" delay={20} />}
           response={<Dog size={260} salivating={frame > 60} alert />}
           responseTag={<Tag kind="cs" abbr="CR" label="Speichelfluss" delay={60} />}
@@ -174,6 +195,9 @@ const terms: { kind: "neutral" | "ucs" | "cs"; abbr: string; name: string; text:
 
 export const BegriffeScene: React.FC = () => (
   <Scene step="Überblick" title="Die Fachbegriffe" duration={DUR.begriffe}>
+    {terms.map((term, i) => (
+      <Sfx key={term.abbr} name="pop" at={18 + i * 35} />
+    ))}
     <div style={{ position: "absolute", top: 250, left: 110, right: 110, display: "flex", flexDirection: "column", gap: 22 }}>
       {terms.map((term, i) => {
         const fg = term.kind === "neutral" ? colors.neutral : term.kind === "ucs" ? colors.ucs : colors.cs;
@@ -197,10 +221,12 @@ export const AlltagScene: React.FC = () => {
   const frame = useCurrentFrame();
   return (
     <Scene step="Im Alltag" title="Angst beim Zahnarzt" duration={DUR.alltag}>
+      <Sfx name="drill" at={25} volume={0.5} />
+      <Sfx name="pop" at={58} />
       <div style={{ ...center, top: 300 }}>
         <Row
           delay={10}
-          stimulus={<Drill size={190} active={frame > 25} />}
+          stimulus={<Drill size={190} active={frame > 25 && frame < 115} />}
           stimulusTags={<Tag kind="cs" abbr="CS" label="Bohrergeräusch" delay={20} />}
           response={<Face size={210} anxious={frame > 55} />}
           responseTag={<Tag kind="cs" abbr="CR" label="Angst" delay={55} />}
@@ -216,6 +242,7 @@ export const AlltagScene: React.FC = () => {
 /* ---------- 6 · Merke ---------- */
 export const MerkeScene: React.FC = () => (
   <Scene duration={DUR.merke}>
+    <Sfx name="chime" at={15} volume={0.7} />
     <AbsoluteFill style={{ justifyContent: "center", alignItems: "center", fontFamily: font }}>
       <Appear delay={5}>
         <div style={{ fontSize: 34, fontWeight: 700, color: colors.cs, letterSpacing: 3, textTransform: "uppercase", textAlign: "center" }}>
