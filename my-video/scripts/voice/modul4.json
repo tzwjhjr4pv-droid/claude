@@ -1,0 +1,19 @@
+{
+  "title": "KI im Klassenraum, datenschutzkonform. Chatbots, Feedback und Aufgaben, die eigenständiges Arbeiten zeigen.",
+  "problemA": "Deine Schülerinnen und Schüler nutzen KI längst. Wie setzt du sie selbst sinnvoll ein, ohne Datenschutzprobleme? Und welche Aufgaben sind eigentlich noch eigenständig bearbeitet?",
+  "problemB": "Vier Regeln und drei Startkarten helfen dir dabei.",
+  "rule1": "Regel eins: Mit Schülerinnen und Schülern nur AIS.chat oder fobizz, nie Klohd oder ChatGPT. Geteilt wird per Link oder QR-Code, ohne Konto.",
+  "rule2": "Regel zwei: Anonymisieren. Namen und erkennbare Details kommen raus, bevor ein Schülertext in ein Werkzeug kommt.",
+  "rule3": "Regel drei: KI-Feedback ist ein Entwurf. Du prüfst und entscheidest. Noten vergibt keine KI.",
+  "rule4": "Regel vier: Transparenz. Schülerinnen, Schüler und Eltern wissen, wann und wofür KI eingesetzt wird.",
+  "a1": "Startkarte A: ein Chatbot für die Klasse. Lege in AIS.chat ein neues Lernszenario an und füge den Muster-Lernbegleiter ein.",
+  "a2": "Er hat vier Bausteine: die Kompetenz, den Arbeitsauftrag, das Verhalten der KI und ihre Grenzen. Zum Beispiel: Verrate keine fertigen Lösungen.",
+  "a3": "Dann testest du selbst als Schülerin oder Schüler, auch mit einer frechen Frage. Hält der Chatbot stand, teilst du ihn per Link oder QR-Code.",
+  "b1": "Startkarte B: KI-gestütztes Feedback, in fünf Schritten. Erstens: anonymisieren. Zweitens: das Kriterienraster mitgeben.",
+  "b2": "Drittens formuliert die KI einen Entwurf: zwei Stärken, zwei konkrete Hinweise. Viertens prüfst und ergänzt du. Und fünftens: keine Note. Die Bewertung bleibt bei dir.",
+  "c1": "Startkarte C: eine KI-resiliente Aufgabe. Lass deine eigene Aufgabe zuerst von der KI lösen. Ist sie in Sekunden fertig, baust du sie um.",
+  "c2": "Zum Beispiel mit eigener Erfahrung aus dem Praktikum, mit Begründen statt Nennen, oder indem die Lernenden eine KI-Antwort prüfen und verbessern. Dann testest du noch einmal.",
+  "classRules": "Was du einsetzt, braucht klare Regeln für die Klasse. Erstens: Offenlegen. Wer KI nutzt, sagt wofür und wie. Zweitens: Prüfen. KI-Antworten können falsch sein. Drittens: Nichts Persönliches. Keine Namen, Fotos oder privaten Daten eingeben.",
+  "detectors": "Und setze auf Transparenzregeln statt auf KI-Detektoren. Die sind unzuverlässig.",
+  "merke": "Merke: Mit Schülerinnen und Schülern nur AIS.chat oder fobizz, keine Noten durch KI. Erst selbst testen, dann einsetzen."
+}

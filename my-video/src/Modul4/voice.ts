@@ -1,0 +1,20 @@
+// Automatisch erzeugt von scripts/make-voice.py – nicht von Hand ändern.
+export const VOICE = {
+  title: 223,
+  problemA: 315,
+  problemB: 100,
+  rule1: 299,
+  rule2: 233,
+  rule3: 207,
+  rule4: 217,
+  a1: 269,
+  a2: 276,
+  a3: 243,
+  b1: 282,
+  b2: 339,
+  c1: 286,
+  c2: 301,
+  classRules: 556,
+  detectors: 166,
+  merke: 229,
+} as const;
