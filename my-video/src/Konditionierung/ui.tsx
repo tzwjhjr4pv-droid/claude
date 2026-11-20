@@ -22,6 +22,13 @@ export const Sfx: React.FC<{ name: string; at: number; volume?: number }> = ({
   </Sequence>
 );
 
+/** Sprecherstimme ab Frame `at` (Dateien aus scripts/make-voice.py) */
+export const Voice: React.FC<{ name: string; at: number }> = ({ name, at }) => (
+  <Sequence from={at} layout="none">
+    <Html5Audio src={staticFile(`voice/${name}.wav`)} volume={1} />
+  </Sequence>
+);
+
 export const useAppear = (delay = 0) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
