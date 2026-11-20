@@ -56,7 +56,7 @@ const center: React.CSSProperties = { position: "absolute", left: 0, right: 0, d
 /* ------------------------------------------------------------------ */
 /* Ordner-Illustration                                                 */
 /* ------------------------------------------------------------------ */
-const Folder: React.FC<{ size?: number; label?: string; fill?: number }> = ({ size = 420, label = PROJECT, fill = 1 }) => {
+export const Folder: React.FC<{ size?: number; label?: string; fill?: number }> = ({ size = 420, label = PROJECT, fill = 1 }) => {
   const frame = useCurrentFrame();
   const sheets = [
     { c: C.amberLight, t: "Anweisung", r: -8 },

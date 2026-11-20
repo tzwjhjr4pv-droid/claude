@@ -1,0 +1,18 @@
+{
+  "title": "Skills für wiederkehrende Aufgaben. Einmal gut gemacht, beim nächsten Mal mit einem Satz abrufbar.",
+  "problemA": "Kennst du das? Für jedes Arbeitsblatt formulierst du wieder dieselben Anweisungen: zwei Niveaustufen, Fachbegriffe erklären, Lösung auf eine eigene Seite.",
+  "problemB": "Genau dafür gibt es Skills.",
+  "compareA": "Ein Skill ist eine gespeicherte Anleitung für eine Aufgabe, die immer wieder vorkommt. Das Projekt liefert den Kontext: Wer ist deine Klasse, welches Material gilt?",
+  "compareB": "Der Skill beschreibt den Arbeitsablauf: Wie wird eine bestimmte Aufgabe erledigt? Und das Beste: Du musst ihn nicht selbst schreiben. Klohd formuliert ihn aus einem Gespräch, das gut gelaufen ist.",
+  "step1A": "Schritt eins: Machen. Erledige die Aufgabe ganz normal mit der Prompt-Formel. Zum Beispiel: Schreibe diesen Text in zwei Niveaustufen.",
+  "step1B": "Dann schärfst du nach, bis das Ergebnis passt. Zum Beispiel: Fachbegriffe fett und in der einfacheren Stufe kurz erklären.",
+  "step2A": "Schritt zwei: Speichern. Schreibe einfach: Erstelle daraus einen Skill.",
+  "step2B": "Klohd schlägt dir einen Skill vor. Du speicherst ihn mit einem Klick.",
+  "step3A": "Schritt drei: Testen. Öffne einen neuen Chat und nimm ein anderes Thema. Tippe einen Schrägstrich, dann siehst du deine Skills und kannst einen auswählen.",
+  "step3B": "Kommt dasselbe Format heraus? Dann funktioniert dein Skill.",
+  "step4": "Schritt vier: Verbessern. Fällt dir etwas auf, schreibst du: Aktualisiere den Skill. Zum Beispiel: Füge immer ein kleines Glossar hinzu. So wird er mit jedem Einsatz besser.",
+  "usage": "Damit Skills funktionieren, schaltest du einmalig in den Einstellungen unter Funktionen die Code-Ausführung an. Das geht auch kostenlos. Deine Skills findest du unter Anpassen, Skills. Dort kannst du sie ansehen, bearbeiten oder als ZIP-Datei mit Kolleginnen und Kollegen teilen.",
+  "worth": "Lohnt sich ein Skill? Ja, bei Routine mit fester Struktur: Texte differenzieren, Arbeitsblatt im Schullayout, Erwartungshorizont oder Feedback. Eher nicht bei Einmaligem oder Kreativem, wie freiem Brainstorming. Da steht ein fester Weg dem Denken im Weg.",
+  "privacy": "Und auch hier gilt: Skills nur mit erfundenen Beispielen erstellen, keine Klarnamen. Der Skill steuert das Vorgehen, die Verantwortung bleibt bei dir. Prüfe jedes Ergebnis.",
+  "merke": "Merke: Erst machen, dann speichern. Was du der KI immer wieder gleich erklärst, gehört in einen Skill. Projekt ist Kontext, Skill ist Arbeitsablauf."
+}

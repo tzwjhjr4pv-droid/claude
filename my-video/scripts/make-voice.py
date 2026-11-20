@@ -13,6 +13,8 @@ MODEL, NAME = sys.argv[1], sys.argv[2]
 TS_PATHS = {
     "konditionierung": "src/Konditionierung/voice.ts",
     "claude-projekt": "src/ClaudeProjekt/voice.ts",
+    "skills": "src/Skills/voice.ts",
+    "workflow": "src/Workflow/voice.ts",
 }
 
 lines = json.loads((ROOT / "scripts" / "voice" / f"{NAME}.json").read_text())

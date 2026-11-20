@@ -39,9 +39,9 @@ export const Sfx: React.FC<{ name: string; at: number; volume?: number; frames?:
   </Sequence>
 );
 
-export const Voice: React.FC<{ name: string; at: number }> = ({ name, at }) => (
+export const Voice: React.FC<{ name: string; at: number; folder?: string }> = ({ name, at, folder = "claude-projekt" }) => (
   <Sequence from={at} layout="none">
-    <Html5Audio src={staticFile(`voice/claude-projekt/${name}.wav`)} />
+    <Html5Audio src={staticFile(`voice/${folder}/${name}.wav`)} />
   </Sequence>
 );
 
