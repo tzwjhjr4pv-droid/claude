@@ -3,6 +3,7 @@ import { MyComposition } from "./Composition";
 import { SkillsComposition } from "./Skills/Video";
 import { WorkflowComposition } from "./Workflow/Video";
 import { Modul4Composition } from "./Modul4/Video";
+import { BegleitComposition } from "./Begleit/Video";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -12,6 +13,7 @@ export const RemotionRoot: React.FC = () => {
       <SkillsComposition />
       <WorkflowComposition />
       <Modul4Composition />
+      <BegleitComposition />
     </>
   );
 };

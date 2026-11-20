@@ -16,6 +16,7 @@ TS_PATHS = {
     "skills": "src/Skills/voice.ts",
     "workflow": "src/Workflow/voice.ts",
     "modul4": "src/Modul4/voice.ts",
+    "begleit": "src/Begleit/voice.ts",
 }
 
 lines = json.loads((ROOT / "scripts" / "voice" / f"{NAME}.json").read_text())
