@@ -1,0 +1,22 @@
+{
+  "name": "erklaervideo-claude-projekt",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Erklärvideo (Remotion): Ein Projekt in Claude anlegen und mit Anweisungen und Material füllen",
+  "scripts": {
+    "studio": "remotion studio",
+    "render": "remotion render src/index.ts ClaudeProjekt out/claude-projekt-erklaervideo.mp4"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.340",
+    "@remotion/google-fonts": "^4.0.340",
+    "@remotion/transitions": "^4.0.340",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "^4.0.340"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "typescript": "^5.6.3"
+  }
+}
