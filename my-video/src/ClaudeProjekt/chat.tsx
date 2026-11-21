@@ -1,6 +1,7 @@
 import React from "react";
 import { spring, useCurrentFrame, useVideoConfig } from "remotion";
 import { C, Caret, WIN } from "./kit";
+import { IS_GPT, TOOL } from "../platform";
 
 export type Msg = { role: "user" | "ai"; at: number; h: number; node: React.ReactNode; think?: number };
 export type PromptT = { text: React.ReactNode; plain: string; start: number; send: number; cps?: number };
@@ -117,7 +118,7 @@ export const ChatView: React.FC<{
                   </div>
                 ) : (
                   <div style={{ display: "flex", gap: 18, width: "100%" }}>
-                    <div style={{ fontSize: 34, color: C.amber, width: 38 }}>✳︎</div>
+                    <div style={{ fontSize: IS_GPT ? 30 : 34, color: IS_GPT ? C.ink : C.amber, width: 38 }}>{IS_GPT ? "◉" : "✳︎"}</div>
                     <div style={{ flex: 1 }}>
                       {thinking ? <Thinking /> : <div style={{ opacity: pc, transform: `translateY(${(1 - pc) * 14}px)` }}>{m.node}</div>}
                     </div>
@@ -153,7 +154,7 @@ export const ChatView: React.FC<{
             <Caret visible={frame < (active?.send ?? 0)} />
           </>
         ) : (
-          "Antworte Claude …"
+          `Antworte ${TOOL} …`
         )}
         <div
           style={{

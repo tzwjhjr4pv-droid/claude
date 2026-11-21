@@ -5,11 +5,15 @@ import { Thought } from "../Konditionierung/fx";
 import { Appear } from "../Konditionierung/ui";
 import { C, Scene, Sfx, Voice as BaseVoice } from "../ClaudeProjekt/kit";
 import { atRatio, Burst, InfoCard, Item, MerkeBox, TitleBlock } from "../ClaudeProjekt/common";
-import { VOICE as V } from "./voice";
+import { VOICE as VC } from "./voice";
+import { VOICE as VG } from "./voice-chatgpt";
+import { IS_GPT, pick, TOOL } from "../platform";
+
+const V: Record<keyof typeof VC, number> = IS_GPT ? VG : VC;
 
 type VKey = keyof typeof V;
 const Voice: React.FC<{ name: VKey; at: number }> = ({ name, at }) => <BaseVoice name={name} at={at} folder="begleit" />;
-const KICKER = "KI-Startpaket · Claude · Begleitblätter";
+const KICKER = `KI-Startpaket · ${TOOL} · Begleitblätter`;
 const GAP = 8;
 
 const seq = (start: number, names: VKey[]) => {
@@ -365,7 +369,7 @@ export const TipsScene: React.FC = () => {
 
 /* Teil 2 · Werkzeuge */
 const TOOLS = [
-  { name: "Claude", kicker: "FÜR DEINE VORBEREITUNG", dark: true, text: "Planen, Material erstellen, Projekte und Skills.", small: "Eigenes Konto. Nie mit Schüler*innen, keine personenbezogenen Daten." },
+  { name: TOOL, kicker: "FÜR DEINE VORBEREITUNG", dark: true, text: pick("Planen, Material erstellen, Projekte und Skills.", "Planen, Material erstellen, Projekte."), small: "Eigenes Konto. Nie mit Schüler*innen, keine personenbezogenen Daten." },
   { name: "AIS.chat", kicker: "MIT SCHÜLER*INNEN", dark: false, text: "Chatbots für die Klasse, Feedback, eigene Assistenten.", small: "Berliner Schulportal, kostenlos, DSGVO-konform. Per Link oder QR-Code." },
   { name: "fobizz", kicker: "MIT SCHÜLER*INNEN", dark: false, text: "KI-Assistenten für Schüler*innen, Korrekturhilfe, Material teilen.", small: "Über die Schullizenz, DSGVO-konform." },
 ];
@@ -415,7 +419,7 @@ const TASKS: { t: string; lane: Lane; r: number }[] = [
   { t: "mit Namen, Noten oder Gesundheitsdaten", lane: 2, r: 0.8 },
 ];
 const LANES = [
-  { t: "Claude", sub: "Vorbereiten · nur für dich", bg: C.dark, fg: "#fff" },
+  { t: TOOL, sub: "Vorbereiten · nur für dich", bg: C.dark, fg: "#fff" },
   { t: "AIS.chat oder fobizz", sub: "mit Schüler*innen", bg: C.petrol, fg: "#fff" },
   { t: "Kein KI-Werkzeug", sub: "personenbezogene Daten", bg: C.red, fg: "#fff" },
 ];

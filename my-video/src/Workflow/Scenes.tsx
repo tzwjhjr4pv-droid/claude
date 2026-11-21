@@ -5,17 +5,21 @@ import { Appear } from "../Konditionierung/ui";
 import { AppWindow, Button, C, Cursor, CursorClicks, CursorKey, Scene, Sfx, Voice as BaseVoice, WinLayer } from "../ClaudeProjekt/kit";
 import { CHAT_SEND, ChatView, Msg, msgLeftInWindow, msgTopInWindow, PromptT } from "../ClaudeProjekt/chat";
 import { atRatio, Burst, InfoCard, Item, MerkeBox, ProblemBar, TitleBlock } from "../ClaudeProjekt/common";
-import { VOICE as V } from "./voice";
+import { VOICE as VC } from "./voice";
+import { VOICE as VG } from "./voice-chatgpt";
+import { IS_GPT, pick, TOOL } from "../platform";
+
+const V: Record<keyof typeof VC, number> = IS_GPT ? VG : VC;
 
 const Voice: React.FC<{ name: keyof typeof V; at: number }> = ({ name, at }) => <BaseVoice name={name} at={at} folder="workflow" />;
-const KICKER = "KI-Startpaket · Claude · Modul 3";
+const KICKER = `KI-Startpaket · ${TOOL} · Modul 3`;
 const GAP = 10;
 const typeLen = (s: string, cps: number) => Math.ceil((s.length / cps) * 30);
 
 const LINKS = [
   { n: 1, title: "Reihe planen", sub: "Leitfrage, Stundenfolge, Kompetenzen", help: "Rahmenlehrplan im Projekt", icon: "🗺️" },
   { n: 2, title: "Stunde planen", sub: "Verlaufsplan mit Phasen, Sozialformen, Zeiten", help: "Projekt, evtl. Skill", icon: "⏱️" },
-  { n: 3, title: "Material erstellen", sub: "Arbeitsblatt, Präsentation, Quiz, Tafelbild", help: "dein Skill aus Modul 2", icon: "📄" },
+  { n: 3, title: "Material erstellen", sub: "Arbeitsblatt, Präsentation, Quiz, Tafelbild", help: pick("dein Skill aus Modul 2", "deine Vorlage aus Modul 2"), icon: "📄" },
   { n: 4, title: "Teilen", sub: "exportieren, an die Klasse oder ins Kollegium", help: "Word, PDF, IServ, TaskCards", icon: "📤" },
 ];
 const linkColor = (n: number) => (n === 4 ? C.dark : n === 3 ? C.amberLight : C.petrolLight);
@@ -171,7 +175,7 @@ const SheetReply: React.FC = () => (
       <br />• Aufgabe 3: Transfer auf dein Praktikum
       <div style={{ marginTop: 10 }}>
         <span style={{ fontSize: 18, fontWeight: 700, color: C.petrol, border: `2px solid ${C.petrol}`, borderRadius: 999, padding: "3px 12px" }}>
-          nutzt Skill: Arbeitsblatt im Schullayout
+          nutzt {pick("Skill", "Vorlage")}: Arbeitsblatt im Schullayout
         </span>
       </div>
     </div>
@@ -250,7 +254,7 @@ export const TitleScene: React.FC = () => (
   <Scene duration={DUR.title}>
     <Voice name="title" at={20} />
     <Sfx name="chime" at={8} volume={0.35} />
-    <TitleBlock kicker={KICKER} lines={["Der Workflow:", "Reihe → Stunde", "→ Material"]} subtitle="Projekt und Skills zu einem Arbeitsablauf verbinden – bis zum fertigen Material." />
+    <TitleBlock kicker={KICKER} lines={["Der Workflow:", "Reihe → Stunde", "→ Material"]} subtitle={`Projekt und ${pick("Skills", "Vorlagen")} zu einem Arbeitsablauf verbinden – bis zum fertigen Material.`} />
     <div style={{ position: "absolute", left: 1220, top: 250, display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
       {LINKS.map((l, i) => (
         <React.Fragment key={l.n}>
@@ -434,7 +438,7 @@ export const DemoScene: React.FC = () => {
   keys.push({ f: DEMO.download - 22, x: fileLeft, y: fileTop });
   keys.push({ f: DEMO.download, x: fileLeft, y: fileTop, click: true });
   keys.push({ f: DEMO.download + 40, x: 1300, y: 600 });
-  const bursts = ["TABELLE!", "VERLAUFSPLAN!", "SKILL HILFT!", "FERTIG!"];
+  const bursts = ["TABELLE!", "VERLAUFSPLAN!", pick("SKILL HILFT!", "VORLAGE HILFT!"), "FERTIG!"];
   return (
     <Scene duration={DUR.demo} kicker={KICKER} title="Im selben Chat">
       {LINK_VOICES.map((v, i) => (
@@ -562,7 +566,7 @@ export const MerkeScene: React.FC = () => (
       ))}
     </div>
     <MerkeBox delay={20} top={400}>
-      <b>Ein Projekt, eine Kette: Reihe → Stunde → Material → teilen.</b> Der Kontext trägt durch, deine Skills sparen den Rest. Prüfen bleibt deine Aufgabe.
+      <b>Ein Projekt, eine Kette: Reihe → Stunde → Material → teilen.</b> Der Kontext trägt durch, deine {pick("Skills", "Vorlagen")} sparen den Rest. Prüfen bleibt deine Aufgabe.
     </MerkeBox>
   </Scene>
 );

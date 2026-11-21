@@ -36,5 +36,9 @@ for key, text in lines.items():
 
 ts = "// Automatisch erzeugt von scripts/make-voice.py – nicht von Hand ändern.\n"
 ts += "export const VOICE = {\n" + "".join(f"  {k}: {v},\n" for k, v in frames.items()) + "} as const;\n"
-(ROOT / TS_PATHS[NAME]).write_text(ts)
+base = NAME[len("chatgpt-"):] if NAME.startswith("chatgpt-") else NAME
+ts_path = TS_PATHS[base]
+if NAME != base:
+    ts_path = ts_path.replace("voice.ts", "voice-chatgpt.ts")
+(ROOT / ts_path).write_text(ts)
 print(frames)

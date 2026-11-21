@@ -1,5 +1,6 @@
 import React from "react";
 import { C, FileRow } from "./kit";
+import { TOOL } from "../platform";
 
 /* Positionen (Fensterkoordinaten) für Cursor-Pfade */
 export const PP = {
@@ -120,13 +121,13 @@ export const ProjectPage: React.FC<{
           Alles in diesem Projekt ist Unterricht in Psychologie, FOS, Klasse 11, an einem Oberstufenzentrum. Die Lerngruppe: …
         </div>
       ) : (
-        <div style={{ fontSize: 20, color: C.muted, lineHeight: 1.4 }}>Sag Claude, wie es in diesem Projekt antworten soll.</div>
+        <div style={{ fontSize: 20, color: C.muted, lineHeight: 1.4 }}>Sag {TOOL}, wie es in diesem Projekt antworten soll.</div>
       )}
     </Card>
 
     <Card title="Dateien" action="＋" top={280} height={480} glow={glow}>
       {files.filter((f) => f.visible).length === 0 && (
-        <div style={{ fontSize: 20, color: C.muted, lineHeight: 1.4 }}>Lade Material hoch, auf das sich Claude stützen soll.</div>
+        <div style={{ fontSize: 20, color: C.muted, lineHeight: 1.4 }}>Lade Material hoch, auf das sich {TOOL} stützen soll.</div>
       )}
       <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
         {files.map((f) => (

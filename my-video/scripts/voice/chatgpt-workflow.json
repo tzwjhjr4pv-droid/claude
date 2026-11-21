@@ -1,0 +1,14 @@
+{
+  "title": "Der Workflow: von der Reihe über die Stunde zum fertigen Material.",
+  "problemA": "Du planst eine neue Reihe und brauchst Stunden und Material, möglichst aus einem Guss, ohne jedes Mal von vorn anzufangen?",
+  "problemB": "Dann verbinde Projekt und Vorlagen zu einer Kette.",
+  "chainA": "Die Kette hat vier Glieder: Reihe planen, Stunde planen, Material erstellen und teilen.",
+  "chainB": "Wichtig: Alles passiert im selben Projekt und im selben Chat. So trägt der Kontext durch, und jeder Schritt baut auf dem vorherigen auf.",
+  "link1": "Glied eins: Plane eine Reihe zu Lernen, sechs Doppelstunden. Gib mir Leitfrage, Stundenfolge und Kompetenzen als Tabelle. Der Rahmenlehrplan im Projekt hilft dabei.",
+  "link2": "Glied zwei: Plane Stunde drei als Verlaufsplan, neunzig Minuten, mit Phasen, Zeiten und Sozialformen. ChatGPT weiß schon, um welche Reihe es geht.",
+  "link3": "Glied drei: Erstelle das Arbeitsblatt für die Erarbeitungsphase. Hier hilft deine Vorlage aus Modul zwei, zum Beispiel das Arbeitsblatt im Schullayout.",
+  "link4": "Glied vier: Gib mir das Arbeitsblatt als Word-Datei. Die Datei lädst du herunter, bearbeitest sie nach und teilst sie.",
+  "share": "So kommt das Material in die Klasse: Präsentationen als PowerPoint oder PDF, Arbeitsblätter als Word oder PDF, interaktive Quiz als HTML-Datei. Teile sie über IServ oder TaskCards. Öffentliche Links meidest du lieber, denn jede Person mit dem Link kann das Material sehen.",
+  "self": "Und was planst du lieber selbst? Die KI entlastet bei Struktur und Rohfassung, bei Varianten und beim Formatieren. Du entscheidest über Ziel und Leitidee der Reihe, darüber, was zu deiner Lerngruppe passt, und du liest alles fachlich gegen.",
+  "merke": "Merke: Ein Projekt, eine Kette. Reihe, Stunde, Material, teilen. Der Kontext trägt durch, deine Vorlagen sparen den Rest. Prüfen bleibt deine Aufgabe."
+}

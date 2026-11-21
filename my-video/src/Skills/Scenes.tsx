@@ -2,13 +2,18 @@ import React from "react";
 import { interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
 import { Person } from "../Konditionierung/Icons";
 import { Appear } from "../Konditionierung/ui";
-import { AppWindow, Button, C, Cursor, CursorClicks, CursorKey, Scene, Sfx, SIDE_Y, Voice as BaseVoice, WinLayer } from "../ClaudeProjekt/kit";
+import { AppWindow, Button, C, Cursor, CursorClicks, CursorKey, FileRow, Scene, Sfx, SIDE_Y, Voice as BaseVoice, WinLayer } from "../ClaudeProjekt/kit";
 import { Attach, CHAT_SEND, ChatView, Msg, msgLeftInWindow, msgTopInWindow, PromptT } from "../ClaudeProjekt/chat";
 import { atRatio, Burst, InfoCard, Item, MerkeBox, ProblemBar, TitleBlock, Toggle } from "../ClaudeProjekt/common";
-import { VOICE as V } from "./voice";
+import { VOICE as VC } from "./voice";
+import { VOICE as VG } from "./voice-chatgpt";
+import { IS_GPT, pick, TOOL } from "../platform";
+
+const V: Record<keyof typeof VC, number> = IS_GPT ? VG : VC;
 
 const Voice: React.FC<{ name: keyof typeof V; at: number }> = ({ name, at }) => <BaseVoice name={name} at={at} folder="skills" />;
-const KICKER = "KI-Startpaket · Claude · Modul 2";
+const KICKER = `KI-Startpaket · ${TOOL} · Modul 2`;
+const SKILL = pick("Skill", "Vorlage");
 const GAP = 10;
 
 const typeLen = (s: string, cps: number) => Math.ceil((s.length / cps) * 30);
@@ -93,10 +98,10 @@ const SkillProposal: React.FC<{ savedAt: number }> = ({ savedAt }) => {
   const saved = frame >= savedAt;
   return (
     <div>
-      <div style={{ fontSize: 22, marginBottom: 10 }}>Gern! Hier ist mein Vorschlag:</div>
+      <div style={{ fontSize: 22, marginBottom: 10 }}>{pick("Gern! Hier ist mein Vorschlag:", "Gern! Hier ist unser Vorgehen als Vorlage:")}</div>
       <div style={{ border: `3px solid ${saved ? C.green : C.petrol}`, borderRadius: 18, overflow: "hidden", width: 760 }}>
         <div style={{ background: saved ? C.green : C.petrol, color: "#fff", padding: "10px 20px", fontSize: 24, fontWeight: 800 }}>
-          📋 Skill: Text differenzieren
+          📋 {SKILL}: Text differenzieren
         </div>
         <div style={{ padding: "12px 20px", fontSize: 20, lineHeight: 1.6 }}>
           • Zwei Niveaustufen: A einfacher, B Standard
@@ -104,10 +109,10 @@ const SkillProposal: React.FC<{ savedAt: number }> = ({ savedAt }) => {
           <br />• Gleiche Inhalte, ähnliche Länge
           <div style={{ marginTop: 10 }}>
             {saved ? (
-              <span style={{ color: C.green, fontWeight: 800, fontSize: 22 }}>✓ Skill gespeichert</span>
+              <span style={{ color: C.green, fontWeight: 800, fontSize: 22 }}>{pick("✓ Skill gespeichert", "✓ Kopiert")}</span>
             ) : (
               <Button primary style={{ fontSize: 21, padding: "8px 18px" }}>
-                Skill speichern
+                {pick("Skill speichern", "Kopieren")}
               </Button>
             )}
           </div>
@@ -123,9 +128,10 @@ const SkillProposal: React.FC<{ savedAt: number }> = ({ savedAt }) => {
 /* ------------------------------------------------------------------ */
 const P1 = "Schreibe diesen Text in zwei Niveaustufen. Was du wissen musst: FOS 11, sehr unterschiedliche Sprachstände, Fachbegriffe bleiben. Stelle mir Rückfragen, bis alles klar ist.";
 const P2 = "Fachbegriffe fett und in Stufe A kurz erklären.";
-const P3 = "Erstelle daraus einen Skill.";
+const P3 = pick("Erstelle daraus einen Skill.", "Fasse unser Vorgehen als Vorlage zusammen.");
 const P4 = "Lernen am Modell – Text im Anhang.";
-const P5 = "Aktualisiere den Skill: Füge immer ein kleines Glossar hinzu.";
+const P5 = pick("Aktualisiere den Skill: Füge immer ein kleines Glossar hinzu.", "Verbessere die Vorlage: Füge immer ein kleines Glossar hinzu.");
+const P4G = "Nutze die Vorlage „Text differenzieren“ für diesen Text: Lernen am Modell.";
 
 const S1 = (() => {
   const b = 15 + V.step1A + GAP;
@@ -224,7 +230,7 @@ const SkillCardBig: React.FC<{ size?: number }> = ({ size = 1 }) => {
       }}
     >
       <div style={{ background: C.petrol, color: "#fff", padding: `${16 * size}px ${24 * size}px`, fontWeight: 900, fontSize: 34 * size }}>
-        📋 Skill: Text differenzieren
+        📋 {SKILL}: Text differenzieren
       </div>
       <div style={{ padding: `${18 * size}px ${24 * size}px`, lineHeight: 1.6 }}>
         ✓ zwei Niveaustufen
@@ -239,7 +245,7 @@ export const TitleScene: React.FC = () => (
   <Scene duration={DUR.title}>
     <Voice name="title" at={20} />
     <Sfx name="chime" at={8} volume={0.35} />
-    <TitleBlock kicker={KICKER} lines={["Skills für", "wiederkehrende", "Aufgaben"]} subtitle="Einmal gut gemacht, beim nächsten Mal mit einem Satz abrufbar." />
+    <TitleBlock kicker={KICKER} lines={[pick("Skills für", "Vorlagen für"), "wiederkehrende", "Aufgaben"]} subtitle="Einmal gut gemacht, beim nächsten Mal mit einem Satz abrufbar." />
     <div style={{ position: "absolute", left: 1180, top: 380 }}>
       <Appear delay={25} bouncy>
         <SkillCardBig />
@@ -307,7 +313,7 @@ export const ProblemScene: React.FC = () => {
             <SkillCardBig size={1.15} />
           </div>
         )}
-        <Burst text="SKILL!" at={b + 15} x={780} y={110} size={140} fill="#B6F0C2" hold={100} rotate={8} />
+        <Burst text={pick("SKILL!", "VORLAGE!")} at={b + 15} x={780} y={110} size={140} fill="#B6F0C2" hold={100} rotate={8} />
       </div>
     </Scene>
   );
@@ -318,7 +324,7 @@ export const CompareScene: React.FC = () => {
   const a1 = atRatio(15, V.compareA, 0.55);
   const note = atRatio(b, V.compareB, 0.45);
   return (
-    <Scene duration={DUR.compare} kicker={`${KICKER} · A`} title="Was ist ein Skill?">
+    <Scene duration={DUR.compare} kicker={`${KICKER} · A`} title={pick("Was ist ein Skill?", "Projekt oder Vorlage?")}>
       <Voice name="compareA" at={15} />
       <Voice name="compareB" at={b} />
       {[a1, b, note].map((f) => (
@@ -332,9 +338,9 @@ export const CompareScene: React.FC = () => {
           <span style={{ color: C.muted }}>z. B. „FOS 11 Psychologie“ mit Rahmenlehrplan</span>
         </Item>
       </InfoCard>
-      <InfoCard x={990} y={240} w={770} kicker="MODUL 2" title="Skill = Arbeitsablauf" delay={b} minH={360}>
+      <InfoCard x={990} y={240} w={770} kicker="MODUL 2" title={`${SKILL} = Arbeitsablauf`} delay={b} minH={360}>
         <Item icon="⚙️" delay={b + 15}>
-          Wie wird eine bestimmte Aufgabe erledigt? Nutzbar in jedem Projekt.
+          Wie wird eine bestimmte Aufgabe erledigt? {pick("Nutzbar in jedem Projekt.", "Mit einem Satz abrufbar.")}
         </Item>
         <Item icon="📋" delay={b + 30}>
           <span style={{ color: C.muted }}>z. B. „Text in zwei Niveaustufen“ oder „Arbeitsblatt im Schullayout“</span>
@@ -343,7 +349,15 @@ export const CompareScene: React.FC = () => {
       <div style={{ position: "absolute", left: 160, right: 160, top: 690 }}>
         <Appear delay={note} bouncy>
           <div style={{ background: C.amberLight, border: `2px solid ${C.amber}`, borderRadius: 18, padding: "24px 32px", fontSize: 32 }}>
-            💡 <b>Du musst keinen Skill selbst schreiben.</b> Claude formuliert ihn aus einem Gespräch, das gut gelaufen ist.
+            {IS_GPT ? (
+              <>
+                ℹ️ <b>Skills gibt es in ChatGPT nur in Business-, Enterprise- und Edu-Plänen.</b> Vorlagen funktionieren in jedem Plan.
+              </>
+            ) : (
+              <>
+                💡 <b>Du musst keinen Skill selbst schreiben.</b> Claude formuliert ihn aus einem Gespräch, das gut gelaufen ist.
+              </>
+            )}
           </div>
         </Appear>
       </div>
@@ -405,7 +419,7 @@ export const Step2Scene: React.FC = () => {
     { f: s.save + 40, x: 1300, y: 500 },
   ];
   return (
-    <Scene duration={DUR.step2} kicker={`${KICKER} · B`} title="Speichern" step={2} path="„Erstelle daraus einen Skill.“">
+    <Scene duration={DUR.step2} kicker={`${KICKER} · B`} title="Speichern" step={2} path={pick("„Erstelle daraus einen Skill.“", "„Fasse unser Vorgehen als Vorlage zusammen.“")}>
       <Voice name="step2A" at={15} />
       <Voice name="step2B" at={s.b} />
       <Sfx name="typing" at={s.t3} frames={s.send3 - s.t3 - 8} volume={0.7} />
@@ -421,7 +435,7 @@ export const Step2Scene: React.FC = () => {
           <div style={{ position: "absolute", right: 30, top: 24 }}>
             <Appear delay={s.save + 10} bouncy>
               <div style={{ background: C.dark, color: "#fff", borderRadius: 14, padding: "12px 20px", fontSize: 22, fontWeight: 700 }}>
-                ✓ In „Anpassen › Skills“ gespeichert
+                {pick("✓ In „Anpassen › Skills“ gespeichert", "✓ In „Vorlagen.docx“ eingefügt · im Projekt › Dateien")}
               </div>
             </Appear>
           </div>
@@ -485,7 +499,13 @@ const chat3 = (): Msg[] => [
     h: 100,
     node: (
       <>
-        <b style={{ color: C.petrol }}>/text-differenzieren</b> {P4}
+        {IS_GPT ? (
+          P4G
+        ) : (
+          <>
+            <b style={{ color: C.petrol }}>/text-differenzieren</b> {P4}
+          </>
+        )}
         <br />
         <Attach name="Text_Lernen_am_Modell.docx" />
       </>
@@ -502,19 +522,18 @@ export const Step3Scene: React.FC = () => {
     { f: s.newChat - 8, x: 140, y: SIDE_Y.newChat },
     { f: s.newChat, x: 140, y: SIDE_Y.newChat, click: true },
     { f: s.newChat + 40, x: 900, y: 712 },
-    { f: s.pick - 10, x: 560, y: 492 },
-    { f: s.pick, x: 560, y: 492, click: true },
+    ...(IS_GPT ? [] : [{ f: s.pick - 10, x: 560, y: 492 }, { f: s.pick, x: 560, y: 492, click: true }]),
     { f: s.send4 - 10, x: CHAT_SEND.x, y: CHAT_SEND.y },
     { f: s.send4, x: CHAT_SEND.x, y: CHAT_SEND.y, click: true },
     { f: s.send4 + 40, x: 1300, y: 600 },
   ];
   return (
-    <Scene duration={DUR.step3} kicker={`${KICKER} · B`} title="Testen" step={3} path="Neuer Chat, anderes Thema">
+    <Scene duration={DUR.step3} kicker={`${KICKER} · B`} title="Testen" step={3} path={pick("Neuer Chat, anderes Thema", "„Nutze die Vorlage … für diesen Text.“")}>
       <Voice name="step3A" at={15} />
       <Voice name="step3B" at={s.b} />
-      <Sfx name="click" at={s.slash} />
-      <Sfx name="pop" at={s.slash + 2} volume={0.5} />
-      <Sfx name="typing" at={s.t4} frames={s.send4 - s.t4 - 8} volume={0.7} />
+      {!IS_GPT && <Sfx name="click" at={s.slash} />}
+      {!IS_GPT && <Sfx name="pop" at={s.slash + 2} volume={0.5} />}
+      <Sfx name="typing" at={IS_GPT ? s.slash - 10 : s.t4} frames={IS_GPT ? s.send4 - s.slash - 8 : s.send4 - s.t4 - 8} volume={0.7} />
       <Sfx name="pop" at={s.a4} volume={0.5} />
       <CursorClicks keys={keys} />
       <AppWindow active="projects">
@@ -524,7 +543,7 @@ export const Step3Scene: React.FC = () => {
           <ChatView
             title="Neuer Chat"
             msgs={chat3()}
-            prompts={[
+            prompts={IS_GPT ? [{ text: P4G, plain: P4G, start: s.slash - 10, send: s.send4, cps: 45 }] : [
               { text: "/", plain: "/", start: s.slash, send: s.pick, cps: 30 },
               {
                 text: (
@@ -540,12 +559,12 @@ export const Step3Scene: React.FC = () => {
             ]}
             empty={
               <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 40, fontFamily: "Georgia, serif", color: C.muted }}>
-                ✳︎ Neuer Chat im Projekt
+                {IS_GPT ? "◉" : "✳︎"} Neuer Chat im Projekt
               </div>
             }
             inputOverlay={
               <>
-                <SlashMenu at={s.slash} until={s.pick + 4} pickAt={s.pick} />
+                {!IS_GPT && <SlashMenu at={s.slash} until={s.pick + 4} pickAt={s.pick} />}
               </>
             }
           />
@@ -571,8 +590,8 @@ export const Step4Scene: React.FC = () => {
       h: 170,
       node: (
         <div style={{ border: `3px solid ${C.green}`, borderRadius: 16, padding: "14px 20px", width: 760, fontSize: 22, lineHeight: 1.5 }}>
-          <div style={{ fontWeight: 800, color: C.green, fontSize: 24 }}>✓ Skill „Text differenzieren“ aktualisiert</div>
-          Neu: am Ende immer ein kleines Glossar mit den Fachbegriffen.
+          <div style={{ fontWeight: 800, color: C.green, fontSize: 24 }}>{pick("✓ Skill „Text differenzieren“ aktualisiert", "✓ Vorlage „Text differenzieren“ verbessert")}</div>
+          {pick("Neu: am Ende immer ein kleines Glossar mit den Fachbegriffen.", "Neu: am Ende immer ein Glossar. Übernimm die neue Fassung in deine Datei „Vorlagen“.")}
           <div style={{ marginTop: 8 }}>
             <span style={{ background: C.petrol, color: "#fff", borderRadius: 999, padding: "3px 14px", fontSize: 18, fontWeight: 800 }}>Version 2</span>
           </div>
@@ -586,7 +605,7 @@ export const Step4Scene: React.FC = () => {
     { f: s.send5 + 40, x: 900, y: 600 },
   ];
   return (
-    <Scene duration={DUR.step4} kicker={`${KICKER} · B`} title="Verbessern" step={4} path="„Aktualisiere den Skill: …“">
+    <Scene duration={DUR.step4} kicker={`${KICKER} · B`} title="Verbessern" step={4} path={pick("„Aktualisiere den Skill: …“", "„Verbessere die Vorlage: …“")}>
       <Voice name="step4" at={15} />
       <Sfx name="typing" at={s.t5} frames={s.send5 - s.t5 - 8} volume={0.7} />
       <Sfx name="chime" at={s.a5 + 4} volume={0.4} />
@@ -603,7 +622,7 @@ export const Step4Scene: React.FC = () => {
 };
 
 /* Bedienung */
-export const UsageScene: React.FC = () => {
+const UsageClaude: React.FC = () => {
   const frame = useCurrentFrame();
   const a = atRatio(15, V.usage, 0.02);
   const sw = atRatio(15, V.usage, 0.18);
@@ -665,6 +684,48 @@ export const UsageScene: React.FC = () => {
   );
 };
 
+const UsageGPT: React.FC = () => {
+  const frame = useCurrentFrame();
+  const a = atRatio(15, V.usage, 0.02);
+  const up = atRatio(15, V.usage, 0.36);
+  const call = atRatio(15, V.usage, 0.6);
+  const prog = interpolate(frame, [up + 20, up + 60], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  return (
+    <Scene duration={DUR.usage} kicker={KICKER} title="So nutzt du Vorlagen">
+      <Voice name="usage" at={15} />
+      <Sfx name="pop" at={a} volume={0.5} />
+      <Sfx name="whoosh" at={up} volume={0.5} />
+      <Sfx name="chime" at={up + 62} volume={0.35} />
+      <Sfx name="pop" at={call} volume={0.5} />
+      <InfoCard x={160} y={240} w={500} kicker="SAMMELN" title="Word-Datei „Vorlagen“" delay={a} minH={430}>
+        {["1 · Text differenzieren", "2 · Arbeitsblatt im Schullayout", "3 · Erwartungshorizont"].map((t, i) => (
+          <Appear key={t} delay={a + 20 + i * 12}>
+            <div style={{ fontSize: 25, fontWeight: 700, border: `2px solid ${C.line}`, borderRadius: 12, padding: "12px 16px" }}>{t}</div>
+          </Appear>
+        ))}
+      </InfoCard>
+      <InfoCard x={710} y={240} w={500} kicker="HOCHLADEN" title="im Projekt › Dateien" delay={up} minH={430}>
+        <FileRow name="Vorlagen.docx" kind="docx" progress={prog} />
+        <div style={{ fontSize: 24, color: C.muted }}>Eine Datei für alle Vorlagen, ohne Namen.</div>
+      </InfoCard>
+      <InfoCard x={1260} y={240} w={500} kicker="AUFRUFEN" title="Mit einem Satz" delay={call} minH={430}>
+        <Appear delay={call + 15}>
+          <div style={{ background: C.petrolLight, borderRadius: "20px 20px 6px 20px", padding: "14px 20px", fontSize: 26, lineHeight: 1.4 }}>
+            „Nutze die Vorlage <b>[Name]</b> für …“
+          </div>
+        </Appear>
+      </InfoCard>
+      <div style={{ position: "absolute", left: 160, right: 160, top: 720 }}>
+        <Appear delay={call + 40}>
+          <div style={{ fontSize: 24, color: C.muted }}>ℹ️ Skills gibt es in ChatGPT nur in Business-, Enterprise- und Edu-Plänen.</div>
+        </Appear>
+      </div>
+    </Scene>
+  );
+};
+
+export const UsageScene: React.FC = () => (IS_GPT ? <UsageGPT /> : <UsageClaude />);
+
 /* Lohnt sich ein Skill? */
 export const WorthScene: React.FC = () => {
   const yes = atRatio(15, V.worth, 0.06);
@@ -673,7 +734,7 @@ export const WorthScene: React.FC = () => {
   const noItems = ["Einmaliges", "Projektideen", "freies Brainstorming"].map((t, i) => [t, atRatio(15, V.worth, 0.66 + i * 0.07)] as const);
   const quote = atRatio(15, V.worth, 0.86);
   return (
-    <Scene duration={DUR.worth} kicker={KICKER} title="Lohnt sich ein Skill?">
+    <Scene duration={DUR.worth} kicker={KICKER} title={pick("Lohnt sich ein Skill?", "Lohnt sich eine Vorlage?")}>
       <Voice name="worth" at={15} />
       {[yes, ...yesItems.map((x) => x[1]), no, ...noItems.map((x) => x[1])].map((f, i) => (
         <Sfx key={i} name="pop" at={f} volume={0.45} />
@@ -716,7 +777,7 @@ export const PrivacyScene: React.FC = () => {
       {[a, b, c].map((f) => (
         <Sfx key={f} name="pop" at={f} volume={0.5} />
       ))}
-      <InfoCard x={160} y={240} w={770} kicker="DATENSCHUTZ" title="Skills mit erfundenen Beispielen" delay={a} minH={420}>
+      <InfoCard x={160} y={240} w={770} kicker="DATENSCHUTZ" title={`${pick("Skills", "Vorlagen")} mit erfundenen Beispielen`} delay={a} minH={420}>
         <Item icon="🧪" delay={a + 12}>
           Nur erfundene Beispiele verwenden.
         </Item>
@@ -724,10 +785,10 @@ export const PrivacyScene: React.FC = () => {
           Keine Klarnamen, keine Schülerinformationen – auch nicht im Musterergebnis.
         </Item>
         <Item icon="👀" delay={a + 36}>
-          Skills von anderen vor dem Speichern lesen.
+          {pick("Skills", "Vorlagen")} von anderen vor dem Speichern lesen.
         </Item>
       </InfoCard>
-      <InfoCard x={990} y={240} w={770} amber kicker="AUCH MIT SKILL" title="Die Verantwortung bleibt bei dir" delay={b} minH={420}>
+      <InfoCard x={990} y={240} w={770} amber kicker={pick("AUCH MIT SKILL", "AUCH MIT VORLAGE")} title="Die Verantwortung bleibt bei dir" delay={b} minH={420}>
         <div style={{ fontSize: 26, color: C.muted }}>5-Punkte-KI-Check:</div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
           {checks.map((t, i) => (
@@ -749,10 +810,10 @@ export const MerkeScene: React.FC = () => (
     <Voice name="merke" at={20} />
     <Sfx name="chime" at={8} volume={0.4} />
     <InfoCard x={300} y={170} w={600} dark kicker="MODUL 1" title="📁 Projekt = Kontext" delay={atRatio(20, V.merke, 0.62)} />
-    <InfoCard x={1020} y={170} w={600} kicker="MODUL 2" title="📋 Skill = Arbeitsablauf" delay={atRatio(20, V.merke, 0.8)} />
+    <InfoCard x={1020} y={170} w={600} kicker="MODUL 2" title={`📋 ${SKILL} = Arbeitsablauf`} delay={atRatio(20, V.merke, 0.8)} />
     <MerkeBox delay={20} top={430}>
-      <b>Erst machen, dann speichern.</b> Was du der KI immer wieder gleich erklärst, gehört in einen Skill. Ein guter Skill spart Zeit, ersetzt aber
-      nicht dein Urteil.
+      <b>Erst machen, dann speichern.</b> Was du der KI immer wieder gleich erklärst, gehört in{" "}
+      {pick("einen Skill. Ein guter Skill spart Zeit, ersetzt aber nicht dein Urteil.", "eine Vorlage. Sie spart Zeit, ersetzt aber nicht dein Urteil.")}
     </MerkeBox>
     <div style={{ position: "absolute", right: 120, bottom: 0 }}>
       <Appear delay={90} bouncy>

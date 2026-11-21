@@ -8,6 +8,7 @@ import {
 } from "remotion";
 import { Html5Audio, staticFile } from "remotion";
 import { Appear, useAppear } from "../Konditionierung/ui";
+import { IS_GPT, TOOL, voiceFolder } from "../platform";
 
 /* ------------------------------------------------------------------ */
 /* Farben im Stil der Merkblätter                                      */
@@ -41,7 +42,7 @@ export const Sfx: React.FC<{ name: string; at: number; volume?: number; frames?:
 
 export const Voice: React.FC<{ name: string; at: number; folder?: string }> = ({ name, at, folder = "claude-projekt" }) => (
   <Sequence from={at} layout="none">
-    <Html5Audio src={staticFile(`voice/${folder}/${name}.wav`)} />
+    <Html5Audio src={staticFile(`voice/${voiceFolder(folder)}/${name}.wav`)} />
   </Sequence>
 );
 
@@ -248,15 +249,17 @@ const SideItem: React.FC<{ label: string; icon: string; active?: boolean; y: num
       display: "flex",
       alignItems: "center",
       gap: 14,
-      padding: "0 16px",
-      fontSize: 24,
+      padding: "0 12px",
+      fontSize: label.length > 13 ? 21 : 24,
+      whiteSpace: "nowrap",
+      overflow: "hidden",
       fontWeight: active ? 700 : 500,
       background: active ? C.petrolLight : "transparent",
       color: active ? C.petrol : C.ink,
     }}
   >
-    <span style={{ width: 26, textAlign: "center" }}>{icon}</span>
-    {label}
+    <span style={{ width: 26, textAlign: "center", flexShrink: 0 }}>{icon}</span>
+    <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>{label}</span>
   </div>
 );
 
@@ -292,12 +295,19 @@ export const AppWindow: React.FC<{
             <div key={c} style={{ width: 14, height: 14, borderRadius: 99, background: c }} />
           ))}
         </div>
-        <div style={{ position: "absolute", left: 34, top: 52, fontSize: 30, fontWeight: 800, fontFamily: "Georgia, serif", color: C.ink }}>
-          Claude
+        <div style={{ position: "absolute", left: 34, top: 52, fontSize: 30, fontWeight: 800, fontFamily: IS_GPT ? FONT : "Georgia, serif", color: C.ink }}>
+          {TOOL}
         </div>
-        <SideItem label="Neuer Chat" icon="＋" y={SIDE_Y.newChat} />
+        <SideItem label="Neuer Chat" icon={IS_GPT ? "✎" : "＋"} y={SIDE_Y.newChat} />
         <SideItem label="Chats" icon="💬" y={SIDE_Y.chats} active={active === "chats"} />
-        <SideItem label="Projekte" icon="📁" y={SIDE_Y.projects} active={active === "projects"} />
+        {IS_GPT ? (
+          <>
+            <SideItem label="Neues Projekt" icon="＋" y={SIDE_Y.projects} />
+            {active === "projects" && <SideItem label="FOS 11 Psychologie" icon="📁" y={SIDE_Y.projects + 55} active />}
+          </>
+        ) : (
+          <SideItem label="Projekte" icon="📁" y={SIDE_Y.projects} active={active === "projects"} />
+        )}
         <SideItem label="Einstellungen" icon="⚙️" y={SIDE_Y.settings} active={active === "settings"} />
       </div>
       <div style={{ position: "absolute", left: WIN.sidebar, top: 0, right: 0, bottom: 0 }}>{children}</div>

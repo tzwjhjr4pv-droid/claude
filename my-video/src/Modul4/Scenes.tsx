@@ -5,10 +5,11 @@ import { Appear, useAppear } from "../Konditionierung/ui";
 import { C, Caret, Scene, Sfx, Voice as BaseVoice } from "../ClaudeProjekt/kit";
 import { atRatio, Burst, InfoCard, MerkeBox, ProblemBar, TitleBlock } from "../ClaudeProjekt/common";
 import { VOICE as V } from "./voice";
+import { TOOL } from "../platform";
 
 type VKey = keyof typeof V;
 const Voice: React.FC<{ name: VKey; at: number }> = ({ name, at }) => <BaseVoice name={name} at={at} folder="modul4" />;
-const KICKER = "KI-Startpaket · Claude · Modul 4";
+const KICKER = `KI-Startpaket · ${TOOL} · Modul 4`;
 const GAP = 8;
 
 /** Startzeiten für nacheinander gesprochene Abschnitte */

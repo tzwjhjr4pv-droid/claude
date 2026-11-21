@@ -23,11 +23,15 @@ import {
   WinLayer,
 } from "./kit";
 import { FileSpec, PP, ProjectPage } from "./ProjectPage";
-import { VOICE as V } from "./voice";
+import { VOICE as VC } from "./voice";
+import { VOICE as VG } from "./voice-chatgpt";
+import { IS_GPT, pick, TOOL } from "../platform";
+
+const V: Record<keyof typeof VC, number> = IS_GPT ? VG : VC;
 
 const GAP = 10;
 const PROJECT = "FOS 11 Psychologie";
-const KICKER = "KI-Startpaket · Claude · Modul 1";
+const KICKER = `KI-Startpaket · ${TOOL} · Modul 1`;
 
 /* ---------- Zeitplan ---------- */
 const T = {
@@ -108,7 +112,7 @@ export const TitleScene: React.FC = () => {
         </Appear>
         <Appear delay={12}>
           <div style={{ fontSize: 104, fontWeight: 900, color: C.petrol, lineHeight: 1.05, marginTop: 20 }}>
-            Claude-Projekte
+            {TOOL}-Projekte
             <br />
             einrichten
           </div>
@@ -326,29 +330,28 @@ export const Step1Scene: React.FC = () => {
     { f: 15, x: 900, y: 520 },
     { f: 50, x: 140, y: SIDE_Y.projects },
     { f: 58, x: 140, y: SIDE_Y.projects, click: true },
-    { f: 95, x: 1420, y: 64 },
-    { f: 105, x: 1420, y: 64, click: true },
+    ...(IS_GPT ? [] : [{ f: 95, x: 1420, y: 64 }, { f: 105, x: 1420, y: 64, click: true }]),
     { f: 140, x: 850, y: 330 },
     { f: 150, x: 850, y: 330, click: true },
     { f: createF - 12, x: 1041, y: 534 },
     { f: createF, x: 1041, y: 534, click: true },
     { f: createF + 40, x: 760, y: 600 },
   ];
-  const view = frame < 58 ? "home" : frame < createF + 4 ? "list" : "project";
+  const view = frame < 58 ? "home" : frame < createF + 4 ? (IS_GPT ? "home" : "list") : "project";
   return (
-    <Scene duration={DUR.step1} kicker={`${KICKER} · B`} title="Anlegen" step={1} path="Projekte › Neues Projekt">
+    <Scene duration={DUR.step1} kicker={`${KICKER} · B`} title="Anlegen" step={1} path={pick("Projekte › Neues Projekt", "Seitenleiste › Neues Projekt")}>
       <Voice name="step1A" at={15} />
       <Voice name="step1B" at={b} />
       <CursorClicks keys={keys} />
       <Sfx name="typing" at={typeStart} frames={typeEnd - typeStart} />
       <Sfx name="chime" at={createF + 6} volume={0.4} />
-      <AppWindow active={view === "home" ? undefined : "projects"}>
+      <AppWindow active={view === "home" || (IS_GPT && view !== "project") ? undefined : "projects"}>
         {view === "home" && <HomeView />}
         {view === "list" && <ProjectsList />}
         {view === "project" && <ProjectPage name={PROJECT} />}
       </AppWindow>
       <WinLayer>
-        <Modal at={108} until={createF + 2} x={500} y={190} w={700} h={400} title="Neues Projekt">
+        <Modal at={pick(108, 66)} until={createF + 2} x={500} y={190} w={700} h={400} title="Neues Projekt">
           <div style={{ fontSize: 22, fontWeight: 600, color: C.muted, marginBottom: 8 }}>Name</div>
           <div
             style={{
@@ -412,11 +415,23 @@ export const Step2Scene: React.FC = () => {
     { t: "„Alles in diesem Projekt ist Unterricht in " },
     { ph: "[Fach]", val: "Psychologie", at: fills[0] },
     { t: ", " },
-    { ph: "[Bildungsgang, Klassenstufe]", val: "FOS, Klasse 11", at: fills[1] },
-    { t: ", an einem Oberstufenzentrum. Die Lerngruppe: " },
-    { ph: "[Sprachstand, Vorwissen, Besonderheiten]", val: "sehr unterschiedliche Sprachstände, wenig Vorwissen, viele Praktikumserfahrungen", at: fills[2] },
+    ...pick<Seg[]>(
+      [
+        { ph: "[Bildungsgang, Klassenstufe]", val: "FOS, Klasse 11", at: fills[1] },
+        { t: ", an einem Oberstufenzentrum. Die Lerngruppe: " },
+        { ph: "[Sprachstand, Vorwissen, Besonderheiten]", val: "sehr unterschiedliche Sprachstände, wenig Vorwissen, viele Praktikumserfahrungen", at: fills[2] },
+      ],
+      [
+        { ph: "[Bildungsgang]", val: "FOS, Klasse 11", at: fills[1] },
+        { t: ". Die Lerngruppe: " },
+        { ph: "[Sprachstand, Vorwissen]", val: "sehr unterschiedliche Sprachstände, wenig Vorwissen", at: fills[2] },
+      ],
+    ),
     {
-      t: ". Orientiere dich am hochgeladenen Material: Der Rahmenlehrplan gibt die Inhalte vor, das Musterblatt zeigt Aufbau und Layout. Antworte knapp und frag nach, wenn dir für eine größere Aufgabe etwas Wichtiges fehlt.“",
+      t: pick(
+        ". Orientiere dich am hochgeladenen Material: Der Rahmenlehrplan gibt die Inhalte vor, das Musterblatt zeigt Aufbau und Layout. Antworte knapp und frag nach, wenn dir für eine größere Aufgabe etwas Wichtiges fehlt.“",
+        ". Orientiere dich am hochgeladenen Material: Der Rahmenlehrplan gibt die Inhalte vor, das Musterblatt zeigt Aufbau und Layout. Antworte knapp und frag nach, wenn etwas fehlt.“",
+      ),
     },
   ];
   const keys: CursorKey[] = [
@@ -460,7 +475,7 @@ export const Step2Scene: React.FC = () => {
             }}
           >
             {frame < paste ? (
-              <span style={{ color: C.muted }}>Wie soll Claude in diesem Projekt antworten?</span>
+              <span style={{ color: C.muted }}>Wie soll {TOOL} in diesem Projekt antworten?</span>
             ) : (
               segs.map((s, i) => {
                 if ("t" in s) return <span key={i}>{s.t}</span>;
@@ -558,7 +573,7 @@ export const Step3Scene: React.FC = () => {
   const rOut = interpolate(frame, [r0 + 50, r0 + 80], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const shake = frame > r0 + 18 && frame < r0 + 45 ? Math.sin(frame * 2.2) * 10 : 0;
   return (
-    <Scene duration={DUR.step3} kicker={`${KICKER} · B`} title="Material hochladen" step={3} path="Dateien › ＋">
+    <Scene duration={DUR.step3} kicker={`${KICKER} · B`} title="Material hochladen" step={3} path={pick("Dateien › ＋", "im Projekt › Dateien")}>
       <Voice name="step3A" at={15} />
       <Voice name="step3B" at={b} />
       <CursorClicks keys={keys} />
@@ -842,8 +857,8 @@ export const PrivacyScene: React.FC = () => {
               width: 1290,
             }}
           >
-            <div style={{ fontSize: 26, fontWeight: 700, color: C.petrol }}>⚙️ Einstellungen › Datenschutz</div>
-            <div style={{ flex: 1, fontSize: 28 }}>„Claude verbessern“</div>
+            <div style={{ fontSize: 26, fontWeight: 700, color: C.petrol }}>{pick("⚙️ Einstellungen › Datenschutz", "⚙️ Einstellungen › Datenkontrollen")}</div>
+            <div style={{ flex: 1, fontSize: 28 }}>{pick("„Claude verbessern“", "„Das Modell für alle verbessern“")}</div>
             <div style={{ fontSize: 24, fontWeight: 700, color: sw > 0.5 ? C.green : C.muted, width: 70 }}>{sw > 0.5 ? "an" : "aus"}</div>
             <div style={{ width: 96, height: 52, borderRadius: 999, background: sw > 0.5 ? C.green : "#C5CCCA", position: "relative" }}>
               <div style={{ position: "absolute", top: 6, left: 6 + sw * 44, width: 40, height: 40, borderRadius: 99, background: "#fff", boxShadow: "0 2px 6px rgba(0,0,0,0.2)" }} />
@@ -905,8 +920,11 @@ export const MerkeScene: React.FC = () => {
         >
           <div style={{ fontSize: 30, fontWeight: 800, letterSpacing: 4, color: C.dark, paddingTop: 8 }}>MERKE</div>
           <div style={{ fontSize: 42, lineHeight: 1.4, color: C.dark }}>
-            <b>Ins Projekt gehört, was immer gilt.</b> Die Anweisung sagt, wer deine Klasse ist, die Dateien zeigen, woran sich die KI
-            orientieren soll. Im Chat bleiben nur Aufgabe und Rückfrage.
+            <b>Ins Projekt gehört, was immer gilt.</b>{" "}
+            {pick(
+              "Die Anweisung sagt, wer deine Klasse ist, die Dateien zeigen, woran sich die KI orientieren soll. Im Chat bleiben nur Aufgabe und Rückfrage.",
+              "Im Chat bleiben nur Aufgabe und Rückfrage. Keine personenbezogenen Daten in ChatGPT, jedes Ergebnis prüfen.",
+            )}
           </div>
         </div>
       </div>

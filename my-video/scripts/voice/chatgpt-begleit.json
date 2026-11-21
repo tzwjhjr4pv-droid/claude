@@ -1,0 +1,17 @@
+{
+  "title": "Gut prompten und das richtige Werkzeug wählen. Zwei Begleitblätter, ein Video.",
+  "introA": "Teil eins: die Prompt-Formel. Stell dir vor, eine Vertretungskraft übernimmt deine Klasse. Sie kennt niemanden. Was musst du ihr alles sagen?",
+  "introB": "Genau so viel Kontext braucht auch die KI.",
+  "f1": "Die Formel hat drei Teile. Erstens: die Aufgabe. Was soll entstehen? Beginne mit einem Verb, zum Beispiel: Erstelle, plane oder formuliere.",
+  "f2": "Zweitens: Was du wissen musst. Lerngruppe und Niveau, Zeit und Umfang, Vorwissen, Format, und woran du ein gutes Ergebnis erkennst.",
+  "f3": "Drittens: die Rückfrage. Stelle mir so lange Rückfragen, bis alles klar ist. So holt sich die KI selbst, was du vergessen hast.",
+  "beforeA": "Ein Beispiel. Zu knapp ist: Mach ein Arbeitsblatt zu Schulz von Thun. Das Ergebnis passt zu irgendeiner Klasse, aber nicht zu deiner.",
+  "beforeB": "Mit der Formel sagst du: Erstelle ein Arbeitsblatt zum Vier-Seiten-Modell. Berufsfachschule Sozialassistenz, erstes Ausbildungsjahr, sehr unterschiedliche Sprachstände, fünfundvierzig Minuten, eine Seite, das Modell ist neu. Und: Stelle mir Rückfragen. Jetzt passt es.",
+  "dictate": "Ein Tipp: Einsprechen statt tippen. Mit der Diktierfunktion steckt in einer Minute Sprechen mehr Kontext als in fünf Minuten Tippen.",
+  "refine": "Das erste Ergebnis ist ein Entwurf. Schärfe im selben Chat nach: kürzer, in einfacherer Sprache, als Tabelle oder mit Lösung auf einer eigenen Seite. Wird der Chat lang und wirr, öffne einen neuen und nimm das Gute mit.",
+  "toolsA": "Teil zwei: Welches Werkzeug wofür? Für den Start reichen drei. ChatGPT für deine Vorbereitung: planen, Material erstellen und Projekte. Aber nie mit Schülerinnen und Schülern und ohne personenbezogene Daten.",
+  "toolsB": "Mit Schülerinnen und Schülern arbeitest du mit AIS.chat über das Berliner Schulportal oder mit fobizz über die Schullizenz. Beide sind datenschutzkonform.",
+  "sort": "Und so sortierst du: Eine Reihe planen, einen Text differenzieren oder ein Arbeitsblatt erstellen geht mit ChatGPT. Ein Chatbot für die Klasse oder Feedback zu Schülertexten läuft über AIS.chat oder fobizz, anonymisiert. Und mit Namen, Noten oder Gesundheitsdaten arbeitest du mit keinem KI-Werkzeug.",
+  "later": "Später kannst du weitere Werkzeuge ausprobieren, zum Beispiel Gemini Notebook, Canva oder Gamma.",
+  "merke": "Merke: Aufgabe plus Kontext plus Rückfrage. Keine personenbezogenen Daten in KI-Werkzeuge. Mit Schülerinnen und Schülern nur AIS.chat oder fobizz. Und jedes Ergebnis prüfst du, bevor du es einsetzt."
+}
