@@ -44,9 +44,11 @@ Ein Video = ein Ordner `my-video/src/<Thema>/` mit
 4. Szenen aus den vorhandenen Bausteinen bauen (siehe unten), nicht neu erfinden.
 5. `npx tsc --noEmit`, dann Standbilder jeder Szene rendern und als
    Kontaktbogen ansehen: Überlappungen, abgeschnittener Text, Lesbarkeit.
-6. Rendern:
-   `npx remotion render <CompositionId> out/<datei>.mp4 --browser-executable=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome`
-   (der eigene Chrome-Download von Remotion ist im Container gesperrt).
+6. Rendern: `npx remotion render <CompositionId> out/<datei>.mp4`
+   In der Cloud zusätzlich
+   `--browser-executable=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome`
+   (dort ist der eigene Chrome-Download von Remotion gesperrt); lokal auf dem
+   Mac lädt Remotion seinen Browser beim ersten Mal selbst.
    Lange Renders im Hintergrund laufen lassen.
 7. Tonspur prüfen (`ffmpeg … -af volumedetect`), committen, pushen.
    `out/` ist nicht im Git; die fertigen MP4 an mich schicken.
@@ -66,6 +68,22 @@ Ein Video = ein Ordner `my-video/src/<Thema>/` mit
 - `src/Konditionierung/ui.tsx`: `Appear`, `useAppear`.
 - `public/sfx/`: pop, click, typing, whoosh, chime, bell, drip, clink, drill
   (erzeugt mit `scripts/make-sfx.py`, keine fremden Audiodateien).
+
+## Lokal auf dem Mac
+
+Einmalige Einrichtung, falls noch nicht geschehen (vorher jeweils fragen):
+- Homebrew prüfen (`brew -v`), sonst die Installation von brew.sh vorschlagen.
+- `brew install node python ffmpeg`.
+- In `my-video/`: `npm install`.
+- Stimme: `python3 -m venv .venv-piper && .venv-piper/bin/pip install piper-tts`;
+  das Modell `de_DE-thorsten-high` (`.onnx` und `.onnx.json`) nach
+  `~/.local/share/piper/` laden. Dann `make-voice.py` mit
+  `.venv-piper/bin/python` starten.
+- Kurzer Testrender (z. B. `--frames=0-90`), um alles zu prüfen.
+
+Fertige Videos zusätzlich in den Google-Drive-Ordner kopieren, den ich nenne
+(Drive für Desktop, meist unter `~/Library/CloudStorage/GoogleDrive-…/`).
+Den Projektordner selbst nicht in Drive legen (`node_modules` ist riesig).
 
 ## Claude- und ChatGPT-Fassung
 
